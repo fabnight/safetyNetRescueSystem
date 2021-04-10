@@ -1,7 +1,12 @@
 package com.safetynet.safetynetrescuesystem.model;
 
-public class Person {
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize(as = Person.class)
+public class Person {
+	@JsonBackReference
+private Persons person;
 	private String firstName;
 	private String lastName;
 	private String address;
@@ -15,7 +20,8 @@ public class Person {
 	}
 
 	// constructeur pour les tests
-	public Person(String firstName, String lastName, String address, String city, String zip, String phone, String email) {
+	public Person(String firstName, String lastName, String address, String city, String zip, String phone,
+			String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
@@ -80,11 +86,11 @@ public class Person {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	 @Override
-	    public String toString(){  
-	        return "Person{"+
-	        "firstName=" + firstName + 
-	        ", lastname='"+ lastName + '\'' + 
-	        ", address=" + address+ '}';
-	    }
+
+	@Override
+	public String toString() {
+		return "Person{" + "firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", address='" + address
+				+ '\'' + ", city='" + city + '\'' + ", zip='" + zip + '\'' + ", phone='" + phone + '\'' + ", email='"
+				+ email + '\'' + '}';
+	}
 }
