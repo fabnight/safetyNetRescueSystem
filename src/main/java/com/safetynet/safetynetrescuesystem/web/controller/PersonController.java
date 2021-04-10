@@ -19,7 +19,7 @@ public String listePersons() {
 
 @GetMapping(value="/Persons/{firstName}/{lastName}")
 public Person afficherUnePerson(@PathVariable String firstName, String lastName) {
-  Person person=new Person(firstName, lastName, new String("5 rue Jean Moquet"),new String("Hambourg"), new String("44 55 55 66"),new String("ert@gmail.com")) ;
+  Person person=new Person(firstName, lastName, new String("5 rue Jean Moquet"),new String("Hambourg"),new String("97451"), new String("44 55 55 66"),new String("ert@gmail.com")) ;
   return person;
 }
 }

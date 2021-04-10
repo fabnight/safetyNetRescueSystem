@@ -6,7 +6,7 @@ public class Person {
 	private String lastName;
 	private String address;
 	private String city;
-	private int zip;
+	private String zip;
 	private String phone;
 	private String email;
 
@@ -15,12 +15,12 @@ public class Person {
 	}
 
 	// constructeur pour les tests
-	public Person(String firstName, String lastName, String address, String city, String phone, String email) {
+	public Person(String firstName, String lastName, String address, String city, String zip, String phone, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
 		this.city = city;
-		//this.zip = zip;
+		this.zip = zip;
 		this.phone = phone;
 		this.email = email;
 	}
@@ -57,11 +57,11 @@ public class Person {
 		this.city = city;
 	}
 
-	public int getZip() {
+	public String getZip() {
 		return zip;
 	}
 
-	public void setZip(int zip) {
+	public void setZip(String zip) {
 		this.zip = zip;
 	}
 
