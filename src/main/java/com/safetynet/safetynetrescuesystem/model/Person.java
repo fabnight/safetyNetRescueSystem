@@ -1,18 +1,29 @@
 package com.safetynet.safetynetrescuesystem.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.safetynet.safetynetrescuesystem.view.*;
 
 @JsonDeserialize(as = Person.class)
 public class Person {
 	@JsonBackReference
-private Persons person;
+	private Persons person;
+	@JsonView(View.FirstName.class)
 	private String firstName;
+	@JsonView(View.LastName.class)
 	private String lastName;
+	@JsonView(View.Address.class)
 	private String address;
+	@JsonView(View.Address.class)
 	private String city;
+	@JsonView(View.Address.class)
 	private String zip;
+	@JsonView(View.Phone.class)
 	private String phone;
+	@JsonView(View.Email.class)
 	private String email;
 
 	// constructeur par défaut
@@ -93,4 +104,22 @@ private Persons person;
 				+ '\'' + ", city='" + city + '\'' + ", zip='" + zip + '\'' + ", phone='" + phone + '\'' + ", email='"
 				+ email + '\'' + '}';
 	}
+	@Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(firstName, person.firstName) &&
+                Objects.equals(lastName, person.lastName) &&
+                Objects.equals(address, person.address) &&
+                Objects.equals(city, person.city) &&
+                Objects.equals(zip, person.zip) &&
+                Objects.equals(phone, person.phone) &&
+                Objects.equals(email, person.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, address, city, zip, phone, email);
+    }
 }
