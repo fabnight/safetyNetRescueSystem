@@ -6,10 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetyNetRescueSystem.service.DataFile;
+import com.safetyNetRescueSystem.service.JacksonReader;
 import com.safetynet.safetynetrescuesystem.model.Person;
 
 @RestController
 public class PersonController {
+	
 @RequestMapping(value="/Persons",method=RequestMethod.GET)
 public String listePersons() {
 	return "un exemple de person";
@@ -19,7 +22,9 @@ public String listePersons() {
 
 @GetMapping(value="/Persons/{firstName}/{lastName}")
 public Person afficherUnePerson(@PathVariable String firstName, String lastName) {
-  Person person=new Person(firstName, lastName, new String("5 rue Jean Moquet"),new String("Hambourg"), new String("44 55 55 66"),new String("ert@gmail.com")) ;
+	//DataFile datafile = new DataFile();
+	//Person person= datafile.getPersons()
+  Person person=new Person(firstName, lastName, new String("5 rue Jean Moquet"),new String("Hambourg"),new String("77500"), new String("44 55 55 66"),new String("ert@gmail.com")) ;
   return person;
 }
 }
