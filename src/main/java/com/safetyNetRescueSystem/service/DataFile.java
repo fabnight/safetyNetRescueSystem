@@ -3,19 +3,21 @@ package com.safetyNetRescueSystem.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
 
 
-
+@Component("datafile")
 public class DataFile {
 	
 	public DataFile() {
 	}
 	public List<Person> persons;
-	private List<Firestation> firestations;
-	private List<MedicalRecord> medicalrecords;
+	public List<Firestation> firestations;
+	public List<MedicalRecord> medicalrecords;
 
 	public DataFile(List<Person> persons, List<Firestation> firestations, List<MedicalRecord> medicalrecords) {
 		this.persons = persons;

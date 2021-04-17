@@ -4,7 +4,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.safetyNetRescueSystem.service.JacksonReader;
+
+import com.safetyNetRescueSystem.service.DataFileReader;
 
 @SpringBootApplication
 public class SafetyNetRescueSystemApplication implements CommandLineRunner {
@@ -15,8 +16,11 @@ public class SafetyNetRescueSystemApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+	
+		String lastName = null;
+		DataFileReader.findPersonByName(lastName);
 		//JacksonReader.readDataFilePersons(args);
-		//JacksonReader.readDataFileFirestations(args);
-		//JacksonReader.readDataFileMedicalrecords(args);
+		//DataFileReader.personReader(args);
+		
 	}
 }
