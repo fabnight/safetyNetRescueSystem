@@ -8,7 +8,7 @@ public class Person {
 	private String city;
 	private String zip;
 	private String phone;
-	private String email;
+	public String email;
 
 	// constructeur par défaut
 	public Person() {
