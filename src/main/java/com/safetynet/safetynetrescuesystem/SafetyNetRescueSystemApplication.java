@@ -21,13 +21,16 @@ public class SafetyNetRescueSystemApplication implements CommandLineRunner {
 	static DataFile dataFile;
 	@Override
 	public void run(String... args) throws Exception {
-	
+		
+		DataFile dataFileLoader=DataFile.getInstance();
+		
 		//String Name = null;
-		String city = null;
+		//String city = null;
+		//DataFileReader.findEmailByCity(city);
 		//DataFileReader.personsReaderTest2(lastName);
 		//DataFileReader.findPersonByName(lastName);
 		//DataFileReader.findEmailByLastName(Name);
-		DataFileReader.findEmailByCity(city);
+		
 		//DataFileReader.personReader(args);
 		
 	}

@@ -33,10 +33,16 @@ public class PersonController {
 	static FullInfoPerson fullInfoPerson;
 
 	@GetMapping(value = "/Persons/{lastName}")
-	public static String personsListTest(@PathVariable String lastName)
+	public static String personsListTest2(@PathVariable String lastName)
 			throws JsonParseException, JsonMappingException, IOException {
 
 		return DataFileReader.personsReaderTest2(lastName);
+	}
+	@GetMapping(value = "/Persontest/{lastName}")
+	public static String personsListTest(@PathVariable String lastName)
+			throws JsonParseException, JsonMappingException, IOException {
+
+		return DataFileReader.personsReaderTest(lastName);
 	}
 
 	@GetMapping(value = "/Person/{lastName}")

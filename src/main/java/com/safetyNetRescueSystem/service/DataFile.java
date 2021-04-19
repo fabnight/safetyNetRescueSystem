@@ -1,17 +1,28 @@
 package com.safetyNetRescueSystem.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
 
-@Component("datafile")
-public class DataFile {
+@Component("dataFile")
+public class DataFile implements Serializable {
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private static DataFile dataFile = new DataFile();
 
-	public DataFile() {
+	private DataFile() {
 	}
 
 	public List<Person> persons;
@@ -142,6 +153,16 @@ public class DataFile {
 	public void setMedicalrecords(List<MedicalRecord> medicalrecords) {
 		this.medicalrecords = medicalrecords;
 	}
+	
+	public static DataFile getInstance() throws JsonParseException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		DataFile dataFileAccess = mapper.readValue(new File("src\\main\\resources\\data.json"), DataFile.class);
+		return dataFileAccess;
+	}
+	public Object readResolve() throws JsonParseException, JsonMappingException, IOException
+    {
+       return DataFile.getInstance( );
+    }  
 
 	@Override
 	public String toString() {
