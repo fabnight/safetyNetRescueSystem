@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +23,7 @@ public class DataFile implements Serializable {
 	private static final long serialVersionUID = 1L;
 private static DataFile dataFile = new DataFile();
 
-	private DataFile() {
+	DataFile() {
 	}
 
 	public List<Person> persons;

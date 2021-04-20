@@ -2,6 +2,7 @@ package com.safetynet.safetynetrescuesystem.web.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +88,7 @@ public class PersonController {
 	}
 
 	@GetMapping(value = "/email/{lastName}")
-	public String getPersonEmail(@PathVariable("lastName") String lastName)
+	public ArrayList<String> getPersonEmail(@PathVariable("lastName") String lastName)
 			throws JsonParseException, JsonMappingException, IOException {
 		return DataFileReader.findEmailByLastName(lastName);
 	}
