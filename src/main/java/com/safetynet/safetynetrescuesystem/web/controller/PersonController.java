@@ -18,17 +18,19 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetyNetRescueSystem.service.DataFile;
-
-import com.safetyNetRescueSystem.service.DataFileReader;
-import com.safetyNetRescueSystem.service.FullInfoPerson;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
+import com.safetynet.safetynetrescuesystem.service.DataFile;
+import com.safetynet.safetynetrescuesystem.service.DataFileReader;
+import com.safetynet.safetynetrescuesystem.service.FullInfoPerson;
+import com.safetynet.safetynetrescuesystem.service.GlobalData;
 
 @RestController
 public class PersonController {
 
+	@Autowired
+	private GlobalData globalData;
 	@Autowired
 	static DataFile dataFile;
 	static FullInfoPerson fullInfoPerson;
@@ -84,6 +86,8 @@ public class PersonController {
 	@GetMapping(value = "/emails/{city}")
 	public List<String> getPersonEmailByCity(@PathVariable("city") String city)
 			throws JsonParseException, JsonMappingException, IOException {
+		System.out.println(globalData.getFirestations());
+		
 		return DataFileReader.findEmailByCity(city);
 	}
 

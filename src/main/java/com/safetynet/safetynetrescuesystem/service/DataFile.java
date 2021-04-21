@@ -1,4 +1,4 @@
-package com.safetyNetRescueSystem.service;
+package com.safetynet.safetynetrescuesystem.service;
 
 import java.io.File;
 import java.io.IOException;

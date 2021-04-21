@@ -8,8 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetyNetRescueSystem.service.DataFile;
-import com.safetyNetRescueSystem.service.DataFileReader;
+import com.safetynet.safetynetrescuesystem.service.DataFile;
+import com.safetynet.safetynetrescuesystem.service.DataFileReader;
 
 @SpringBootApplication
 public class SafetyNetRescueSystemApplication implements CommandLineRunner {
