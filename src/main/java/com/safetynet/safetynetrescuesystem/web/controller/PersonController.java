@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,10 @@ public class PersonController {
 	@GetMapping(value = "/communityEmailcity/{city}")
 	public List<String> getPersonEmailByCity(@PathVariable("city") String city)
 			throws JsonParseException, JsonMappingException, IOException {
-		System.out.println(globalData.getFirestations());
+		//String FirstName= "John";
+		//tring LastName="Boyd";
+		//Person person = new Person();
+		//System.out.println(person.getMedicalRecord().getBirthdate());
 		
 		return DataFileReader.findEmailByCity(city);
 	}
@@ -93,5 +97,15 @@ public class PersonController {
 			throws JsonParseException, JsonMappingException, IOException {
 		return DataFileReader.findEmailByLastName(lastName);
 	}
+	@GetMapping(value = "/Medication/{lastName}/{FirstName}")
+	public HashMap<String,Object> getMedications(@PathVariable("lastName") String lastName, String FirstName)
+			throws JsonParseException, JsonMappingException, IOException {
+		return DataFileReader.findMedicationsByPerson(lastName, FirstName);
+	}
 	
+	@GetMapping(value = "/Allergies/{lastName}/{FirstName}")
+	public HashMap<String,Object> getAllergies(@PathVariable("lastName") String lastName, String FirstName)
+			throws JsonParseException, JsonMappingException, IOException, ParseException {
+		return DataFileReader.findAllergiesByPerson(lastName, FirstName);
+	}
 }
