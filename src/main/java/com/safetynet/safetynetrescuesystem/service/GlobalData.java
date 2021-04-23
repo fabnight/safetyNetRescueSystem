@@ -14,7 +14,7 @@ import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
 
 @Service
-public class GlobalData {
+public final class GlobalData {
 
 	private List<Person> persons;
 	private List<Firestation> firestations;
