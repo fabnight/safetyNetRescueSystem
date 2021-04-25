@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -97,15 +99,29 @@ public class PersonController {
 			throws JsonParseException, JsonMappingException, IOException {
 		return DataFileReader.findEmailByLastName(lastName);
 	}
-	@GetMapping(value = "/Medication/{lastName}/{FirstName}")
-	public HashMap<String,Object> getMedications(@PathVariable("lastName") String lastName, String FirstName)
+	@GetMapping(value = "/Medication/{lastName}/{firstName}")
+	public HashMap<String,Object> getMedications(@PathVariable("lastName")String lastName, @PathVariable("firstName")  String firstName)
 			throws JsonParseException, JsonMappingException, IOException {
-		return DataFileReader.findMedicationsByPerson(lastName, FirstName);
+		return DataFileReader.findMedicationsByPerson(lastName, firstName);
 	}
 	
-	@GetMapping(value = "/Allergies/{lastName}/{FirstName}")
-	public HashMap<String,Object> getAllergies(@PathVariable("lastName") String lastName, String FirstName)
+	@GetMapping(value = "/Age/{lastName}/{firstName}")
+	public HashMap<String, Long> getAge(@PathVariable("lastName")String lastName, @PathVariable("firstName")  String firstName)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return DataFileReader.findAllergiesByPerson(lastName, FirstName);
+		return DataFileReader.findAgeByPerson(lastName, firstName);
 	}
+	
+	@GetMapping(value = "/Allergies/{lastName}/{firstName}")
+	public HashMap<String,Object> getAllergies(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName)
+			throws JsonParseException, JsonMappingException, IOException, ParseException {
+		return DataFileReader.findAllergiesByPerson(lastName);
+	}
+	
+	@PostMapping(value="/firestation")
+	public void addFirestation(@RequestBody Firestation firestation) {
+		
+		
+	}
+	
+	
 }

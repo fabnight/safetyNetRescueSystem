@@ -28,7 +28,7 @@ public class SafetyNetRescueSystemApplication implements CommandLineRunner {
 		
 		//Person Tenley = new Person();
 		//Person Boyd =  new Person();
-		//DataFileReader.calculOfageOfPerson(Tenley,Boyd);
+		
 		
 	}
 }

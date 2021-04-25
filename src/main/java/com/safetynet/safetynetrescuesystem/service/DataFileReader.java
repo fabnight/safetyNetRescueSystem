@@ -3,16 +3,13 @@ package com.safetynet.safetynetrescuesystem.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
-import com.safetynet.safetynetrescuesystem.service.GlobalData;
-import com.safetynet.safetynetrescuesystem.service.GlobalData.Data;
 
 @Component
 public final class DataFileReader {
@@ -35,6 +31,7 @@ public final class DataFileReader {
 	@Autowired
 
 	static GlobalData globalData;
+	private static long age;
 
 	public static final ArrayList<String> findInfopersonsByFirestation(@RequestParam String station, Person FirstName,
 			Person LastName) throws JsonParseException, JsonMappingException, IOException, ParseException {
@@ -155,39 +152,77 @@ public final class DataFileReader {
 
 			if (city.equals(person.getCity()))
 				listOfEmails.add(person.getEmail());
-			System.out.println("hello");
-			System.out.println(person.getMedicalRecord().getBirthdate());
+
+			// System.out.println(person.getMedicalRecord().getBirthdate());
 		}
 		return listOfEmails;
 	}
 
-	public static final HashMap<String, Object> findMedicationsByPerson(@RequestParam String LastName, String FirstName)
-			throws JsonParseException, JsonMappingException, IOException {
+	public static final HashMap<String, Object> findMedicationsByPerson(@RequestParam String lastName,
+			@RequestParam String firstName) throws JsonParseException, JsonMappingException, IOException {
 		HashMap<String, Object> listMedications = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		globalData = mapper.readValue(new File("src\\main\\resources\\data.json"), GlobalData.class);
 		for (MedicalRecord medicalrecords : globalData.getMedicalrecords()) {
-
-			listMedications.put(medicalrecords.getFullName(), medicalrecords.getMedications());
+			if (lastName.equals(medicalrecords.getLastName()) && (firstName.equals(medicalrecords.getFirstName())))
+				listMedications.put(medicalrecords.getLastName(), medicalrecords.getMedications());
 
 		}
 		return listMedications;
 
 	}
 
-	public static final HashMap<String, Object> findAllergiesByPerson(@RequestParam String LastName, String FirstName)
-			throws JsonParseException, JsonMappingException, IOException, ParseException {
+	public static final HashMap<String, Object> findAllergiesByPerson(@RequestParam String lastName)	throws JsonParseException, JsonMappingException, IOException, ParseException {
+
 		HashMap<String, Object> listAllergies = new HashMap<String, Object>();
+
 		ObjectMapper mapper = new ObjectMapper();
 		globalData = mapper.readValue(new File("src\\main\\resources\\data.json"), GlobalData.class);
+		
 		for (MedicalRecord medicalrecords : globalData.getMedicalrecords()) {
-			DataFileReader.calculOfageOfPerson();
-			listAllergies.put(medicalrecords.getFullName(), medicalrecords.getAllergies());
+			// DataFileReader.calculOfageOfPerson();
+			if ((medicalrecords.getFullName().contains(lastName))) //&& (firstName.equals(medicalrecords.getFirstName())))
+				listAllergies.put(medicalrecords.getFullName(), medicalrecords.getAllergies());
 
 		}
 		return listAllergies;
 	}
 
+	public static final HashMap<String, Long> findAgeByPerson(@RequestParam String lastName, @RequestParam String firstName)	throws JsonParseException, JsonMappingException, IOException, ParseException {
+
+		HashMap<String, Long> ageOfAPerson = new HashMap<String, Long>();
+
+		ObjectMapper mapper = new ObjectMapper();
+		globalData = mapper.readValue(new File("src\\main\\resources\\data.json"), GlobalData.class);
+		
+		for (MedicalRecord medicalrecords : globalData.getMedicalrecords()) {
+			// DataFileReader.calculOfageOfPerson();
+			if ((lastName.equals(medicalrecords.getLastName())) && (firstName.equals(medicalrecords.getFirstName())))
+				ageOfAPerson.put(medicalrecords.getFullName(), DataFileReader.calculOfageByPerson(lastName, firstName));
+
+		}
+		return ageOfAPerson;
+	}
+	
+	public static final Long calculOfageByPerson(@RequestParam String lastName, @RequestParam String firstName)	throws JsonParseException, JsonMappingException, IOException, ParseException {
+		ObjectMapper mapper = new ObjectMapper();
+		globalData = mapper.readValue(new File("src\\main\\resources\\data.json"), GlobalData.class);
+
+		for (MedicalRecord medicalRecord : globalData.getMedicalrecords()) {
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+			LocalDate birthDate = LocalDate.parse(medicalRecord.getBirthdate(), dtf);
+			LocalDate today = LocalDate.now(ZoneId.systemDefault());
+			Long age = ChronoUnit.YEARS.between(birthDate, today);
+			boolean child = age < 18;
+			String categorie = new String();
+			if(child==true) categorie="child"; else categorie="adult";
+			if (lastName.equals(medicalRecord.getLastName()) && (firstName.equals(medicalRecord.getFirstName())))
+						
+			System.out.println(medicalRecord.getLastName()+ "/" +medicalRecord.getFirstName()+ "/" +birthDate + "/" + age + "/" + categorie);
+		}
+		
+		return age;
+		}
 
 	public static void calculOfageOfPerson()
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
@@ -201,10 +236,11 @@ public final class DataFileReader {
 			long age = ChronoUnit.YEARS.between(birthDate, today);
 			// if (firstName.equals(medicalRecord.getFirstName()) &&
 			// (lastName.equals(medicalRecord.getLastName())))
-			boolean child = age<18;
-			System.out.println(birthDate +" "+age+" "+child);
-			
-		}
-	}
+			boolean child = age < 18;
+			System.out.println(birthDate + " " + age + " " + child);
 
+		}
+		return;
+	}
 }
+	
