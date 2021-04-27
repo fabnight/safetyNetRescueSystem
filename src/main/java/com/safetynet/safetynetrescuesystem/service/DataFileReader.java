@@ -26,10 +26,8 @@ import com.safetynet.safetynetrescuesystem.model.Person;
 
 @Component
 public final class DataFileReader {
-	@Autowired
-	static DataFile dataFile;
-	@Autowired
 
+	@Autowired
 	static GlobalData globalData;
 	private static long age;
 
