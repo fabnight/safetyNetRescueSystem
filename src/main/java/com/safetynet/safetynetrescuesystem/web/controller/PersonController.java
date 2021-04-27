@@ -68,7 +68,7 @@ public class PersonController {
 		return DataFileReader.findPersonsPhoneNumberByFireStationId(station);
 	}
 
-	@GetMapping(value = "/Firestations/{station}")
+	@GetMapping(value = "flood/stations/{station}")
 	public ArrayList<String> firestationsList(@PathVariable String station, MedicalRecord firstName, MedicalRecord LastName)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		System.out.println(globalData.getFirestations());
