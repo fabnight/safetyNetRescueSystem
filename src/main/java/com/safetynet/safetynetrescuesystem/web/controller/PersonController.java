@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.safetynet.safetynetrescuesystem.dto.AddressPersonsDto;
+import com.safetynet.safetynetrescuesystem.dto.FirestationPersonsDto;
 import com.safetynet.safetynetrescuesystem.dto.PersonInfoDto;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
@@ -34,9 +36,10 @@ public class PersonController {
 	private DataFileReader dataFileReader;
 
 	@GetMapping(value = "/firestation")
-	public ArrayList<String> personsByfirestationsList(@RequestParam(name = "stationNumber") String station)
+	public ArrayList<FirestationPersonsDto> personsByfirestationsList(
+			@RequestParam(name = "stationNumber") String station)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.findInfopersonsByFirestation(station);
+		return dataFileReader.findInfopersonsByStationNumberDto(station);
 	}
 
 	@GetMapping(value = "/childAlert")
@@ -52,26 +55,19 @@ public class PersonController {
 	}
 
 	@GetMapping(value = "/fire")
-	public ArrayList<String> fire(@RequestParam("address") String address)
-			throws JsonParseException, JsonMappingException, IOException {
-		return fire(null);
+	public HashMap<String, ArrayList<AddressPersonsDto>> fire(@RequestParam("address") String address)
+			throws JsonParseException, JsonMappingException, IOException, ParseException {
+		return dataFileReader.listByStation(address);
 	}
 
 	@GetMapping(value = "flood/stations")
-	public ArrayList<String> firestationsList(@RequestParam("stations") String station)
+	public ArrayList<AddressPersonsDto> firestationsList(@RequestParam("stations") String station)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		System.out.println(globalData.getFirestations());
-		return dataFileReader.findInfopersonsByFirestation(station);
+		return dataFileReader.findInfopersonsByFirestationDto(station);
 	}
 
 	@GetMapping(value = "/personInfo")
-	public HashMap<String, Object> getAllergies(@RequestParam(name = "firstName") String firstName,
-			@RequestParam(name = "lastName") String lastName)
-			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.findAllergiesByPerson(lastName);
-	}
-	
-	@GetMapping(value = "/personInfoDto")
 	public ArrayList<PersonInfoDto> fgetAllergies(@RequestParam(name = "firstName") String firstName,
 			@RequestParam(name = "lastName") String lastName)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
