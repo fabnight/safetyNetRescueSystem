@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.safetynet.safetynetrescuesystem.dto.AddressPersonsDto;
@@ -109,8 +110,8 @@ public class PersonController {
 	}
 
 	@PostMapping(value = "/firestation")
-	public void addFirestation(@RequestBody Firestation firestation) {
-
+	public void postFirestation(@RequestBody Firestation firestation) throws JsonGenerationException, JsonMappingException, IOException {
+dataFileReader.postFirestation(firestation);
 	}
 
 }

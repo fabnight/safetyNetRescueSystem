@@ -1,6 +1,8 @@
 package com.safetynet.safetynetrescuesystem.service;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,14 +17,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetrescuesystem.dto.AddressPersonsDto;
 import com.safetynet.safetynetrescuesystem.dto.FirestationPersonsDto;
 import com.safetynet.safetynetrescuesystem.dto.PersonInfoDto;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
+import com.safetynet.safetynetrescuesystem.service.GlobalData.Data;
 
 @Component
 public class DataFileReader {
@@ -380,5 +385,13 @@ public class DataFileReader {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
+	}
+	
+	public Firestation postFirestation(Firestation firestation) throws JsonGenerationException, JsonMappingException, IOException {
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(new File("src\\main\\resources\\data.json"), firestation);
+		
+		return firestation;
 	}
 }
