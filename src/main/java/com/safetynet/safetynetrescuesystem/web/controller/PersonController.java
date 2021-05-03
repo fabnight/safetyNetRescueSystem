@@ -7,9 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +21,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.safetynet.safetynetrescuesystem.dto.AddressPersonsDto;
+import com.safetynet.safetynetrescuesystem.dto.ChildDto;
 import com.safetynet.safetynetrescuesystem.dto.FirestationPersonsDto;
 import com.safetynet.safetynetrescuesystem.dto.PersonInfoDto;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
@@ -37,16 +41,16 @@ public class PersonController {
 	private DataFileReader dataFileReader;
 
 	@GetMapping(value = "/firestation")
-	public ArrayList<FirestationPersonsDto> personsByfirestationsList(
+	public HashMap<Object, ArrayList<FirestationPersonsDto>> personsByfirestationsList(
 			@RequestParam(name = "stationNumber") String station)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		return dataFileReader.findInfopersonsByStationNumberDto(station);
 	}
 
 	@GetMapping(value = "/childAlert")
-	public ArrayList<String> todo(@RequestParam("address") String address)
-			throws JsonParseException, JsonMappingException, IOException {
-		return todo(null);
+	public HashMap<String, ArrayList<ChildDto>> todo(@RequestParam("address") String address)
+			throws JsonParseException, JsonMappingException, IOException, ParseException {
+		return dataFileReader.listOfChildren(address);
 	}
 
 	@GetMapping(value = "/phoneAlert")
@@ -96,22 +100,46 @@ public class PersonController {
 		return dataFileReader.findEmailByLastName(lastName);
 	}
 
-	@GetMapping(value = "/Medication/{lastName}/{firstName}")
-	public HashMap<String, Object> getMedications(@PathVariable("lastName") String lastName,
-			@PathVariable("firstName") String firstName) throws JsonParseException, JsonMappingException, IOException {
-		return dataFileReader.findMedicationsByPerson(lastName, firstName);
-	}
-
-	@GetMapping(value = "/Age/{lastName}/{firstName}")
-	public HashMap<String, Long> getAge(@PathVariable("lastName") String lastName,
-			@PathVariable("firstName") String firstName)
-			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.findAgeByPerson(lastName, firstName);
-	}
+//	@GetMapping(value = "/Medication/{lastName}/{firstName}")
+//	public HashMap<String, Object> getMedications(@PathVariable("lastName") String lastName,
+//			@PathVariable("firstName") String firstName) throws JsonParseException, JsonMappingException, IOException {
+//		return dataFileReader.findMedicationsByPerson(lastName, firstName);
+//	}
+//
+//	@GetMapping(value = "/Age/{lastName}/{firstName}")
+//	public HashMap<String, Long> getAge(@PathVariable("lastName") String lastName,
+//			@PathVariable("firstName") String firstName)
+//			throws JsonParseException, JsonMappingException, IOException, ParseException {
+//		return dataFileReader.findAgeByPerson(lastName, firstName);
+//	}
 
 	@PostMapping(value = "/firestation")
-	public void postFirestation(@RequestBody Firestation firestation) throws JsonGenerationException, JsonMappingException, IOException {
-dataFileReader.postFirestation(firestation);
+	public ResponseEntity<Firestation> postFirestation(@RequestBody Firestation firestation)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		globalData.getFirestations().add(firestation);
+		return new ResponseEntity<Firestation>(firestation, HttpStatus.CREATED);
 	}
 
+	@PutMapping(value = "/firestation")
+	public ResponseEntity<Firestation> putFirestation(@RequestBody Firestation firestation)
+			throws JsonGenerationException, JsonMappingException, IOException {
+
+		List<Firestation> firestations = globalData.getFirestations();
+		Firestation stationToUpdate = null;
+
+		for (Integer i = 0; i < firestations.size() && stationToUpdate == null; i++) {
+
+			if (firestation.getAddress().equals(firestations.get(i).getAddress())) {
+				stationToUpdate = firestations.get(i);
+			}
+			
+		}
+		if (stationToUpdate != null) {
+			stationToUpdate.setStation(firestation.getStation()); 
+			System.out.println(globalData.getFirestations());
+			return new ResponseEntity<Firestation>(firestation, HttpStatus.OK);
+
+		}
+		return new ResponseEntity<Firestation>(firestation, HttpStatus.BAD_REQUEST);
+	}
 }
