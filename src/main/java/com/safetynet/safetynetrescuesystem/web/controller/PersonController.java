@@ -7,10 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +28,10 @@ import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
 
 import com.safetynet.safetynetrescuesystem.service.DataFileReader;
+import com.safetynet.safetynetrescuesystem.service.FirestationEndpoint;
 import com.safetynet.safetynetrescuesystem.service.GlobalData;
+import com.safetynet.safetynetrescuesystem.service.MedicalRecordEndpoint;
+import com.safetynet.safetynetrescuesystem.service.PersonEndpoint;
 
 @RestController
 public class PersonController {
@@ -39,6 +41,12 @@ public class PersonController {
 
 	@Autowired
 	private DataFileReader dataFileReader;
+	@Autowired
+	private PersonEndpoint personEndpoint;
+	@Autowired
+	private FirestationEndpoint firestationEndpoint;
+	@Autowired
+	private MedicalRecordEndpoint medicalRecordEndpoint;
 
 	@GetMapping(value = "/firestation")
 	public HashMap<Object, ArrayList<FirestationPersonsDto>> personsByfirestationsList(
@@ -50,7 +58,7 @@ public class PersonController {
 	@GetMapping(value = "/childAlert")
 	public HashMap<String, ArrayList<ChildDto>> todo(@RequestParam("address") String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.listOfChildren(address);
+		return dataFileReader.findListOfChildren(address);
 	}
 
 	@GetMapping(value = "/phoneAlert")
@@ -58,11 +66,11 @@ public class PersonController {
 			throws JsonParseException, JsonMappingException, IOException {
 		return dataFileReader.findPersonsPhoneNumberByFireStationId(station);
 	}
-
+//todo : voir comment préciser la station
 	@GetMapping(value = "/fire")
 	public HashMap<String, ArrayList<AddressPersonsDto>> fire(@RequestParam("address") String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.listByStation(address);
+		return dataFileReader.findListByStation(address);
 	}
 
 	@GetMapping(value = "flood/stations")
@@ -87,59 +95,72 @@ public class PersonController {
 	}
 
 /////////////////////////////////
-	@GetMapping(value = "/MedicalRecords/{lastNamePerson}")
-	public ArrayList<String> MedicalRecordsList(@PathVariable("lastNamePerson") String lastNamePerson)
-			throws JsonParseException, JsonMappingException, IOException {
-
-		return dataFileReader.findMedicalRecordsByPerson(lastNamePerson);
-	}
-
-	@GetMapping(value = "/email/{lastName}")
-	public ArrayList<String> getPersonEmail(@PathVariable("lastName") String lastName)
-			throws JsonParseException, JsonMappingException, IOException {
-		return dataFileReader.findEmailByLastName(lastName);
-	}
-
-//	@GetMapping(value = "/Medication/{lastName}/{firstName}")
-//	public HashMap<String, Object> getMedications(@PathVariable("lastName") String lastName,
-//			@PathVariable("firstName") String firstName) throws JsonParseException, JsonMappingException, IOException {
-//		return dataFileReader.findMedicationsByPerson(lastName, firstName);
-//	}
+//	@GetMapping(value = "/MedicalRecords/{lastNamePerson}")
+//	public ArrayList<String> MedicalRecordsList(@PathVariable("lastNamePerson") String lastNamePerson)
+//			throws JsonParseException, JsonMappingException, IOException {
 //
-//	@GetMapping(value = "/Age/{lastName}/{firstName}")
-//	public HashMap<String, Long> getAge(@PathVariable("lastName") String lastName,
-//			@PathVariable("firstName") String firstName)
-//			throws JsonParseException, JsonMappingException, IOException, ParseException {
-//		return dataFileReader.findAgeByPerson(lastName, firstName);
+//		return dataFileReader.findMedicalRecordsByPerson(lastNamePerson);
 //	}
+
+//	@GetMapping(value = "/email/{lastName}")
+//	public ArrayList<String> getPersonEmail(@PathVariable("lastName") String lastName)
+//			throws JsonParseException, JsonMappingException, IOException {
+//		return dataFileReader.findEmailByLastName(lastName);
+//	}
+/////////////////////////////////////////
+
+	@PostMapping(value = "/person")
+	public ResponseEntity<Person> postPerson(@RequestBody Person person)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		return personEndpoint.postPerson(person);
+	}
+
+	@PutMapping(value = "/person")
+	public ResponseEntity<Person> putPerson(@RequestBody Person person)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		return personEndpoint.putPerson(person);
+	}
+
+	@DeleteMapping(value = "/person")
+	public ResponseEntity<Person> deletePerson(@RequestBody Person person)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		return personEndpoint.deletePerson(person);
+	}
 
 	@PostMapping(value = "/firestation")
 	public ResponseEntity<Firestation> postFirestation(@RequestBody Firestation firestation)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		globalData.getFirestations().add(firestation);
-		return new ResponseEntity<Firestation>(firestation, HttpStatus.CREATED);
+		return firestationEndpoint.postFirestation(firestation);
 	}
 
 	@PutMapping(value = "/firestation")
 	public ResponseEntity<Firestation> putFirestation(@RequestBody Firestation firestation)
 			throws JsonGenerationException, JsonMappingException, IOException {
+		return firestationEndpoint.putFirestation(firestation);
+	}
 
-		List<Firestation> firestations = globalData.getFirestations();
-		Firestation stationToUpdate = null;
+	@DeleteMapping(value = "/firestation")
+	public ResponseEntity<Firestation> deleteFirestation(@RequestBody Firestation firestation)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		return firestationEndpoint.deleteFirestation(firestation);
+	}
 
-		for (Integer i = 0; i < firestations.size() && stationToUpdate == null; i++) {
+	@PostMapping(value = "/medicalRecord")
+	public ResponseEntity<MedicalRecord> postFirestation(@RequestBody MedicalRecord medicalRecord)
+			throws JsonGenerationException, JsonMappingException, IOException {
 
-			if (firestation.getAddress().equals(firestations.get(i).getAddress())) {
-				stationToUpdate = firestations.get(i);
-			}
-			
-		}
-		if (stationToUpdate != null) {
-			stationToUpdate.setStation(firestation.getStation()); 
-			System.out.println(globalData.getFirestations());
-			return new ResponseEntity<Firestation>(firestation, HttpStatus.OK);
+		return medicalRecordEndpoint.postMedicalRecord(medicalRecord);
+	}
 
-		}
-		return new ResponseEntity<Firestation>(firestation, HttpStatus.BAD_REQUEST);
+	@PutMapping(value = "/medicalRecord")
+	public ResponseEntity<MedicalRecord> putMedicalRecords(@RequestBody MedicalRecord medicalRecord)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		return medicalRecordEndpoint.putMedicalRecord(medicalRecord);
+	}
+
+	@DeleteMapping(value = "/medicalRecord")
+	public ResponseEntity<MedicalRecord> deleteMedicalRecords(@RequestBody MedicalRecord medicalRecord)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		return medicalRecordEndpoint.deleteMedicalRecord(medicalRecord);
 	}
 }

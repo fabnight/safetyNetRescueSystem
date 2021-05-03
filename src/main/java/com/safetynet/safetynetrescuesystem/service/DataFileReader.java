@@ -1,29 +1,20 @@
 package com.safetynet.safetynetrescuesystem.service;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetrescuesystem.dto.AddressPersonsDto;
 import com.safetynet.safetynetrescuesystem.dto.ChildDto;
 import com.safetynet.safetynetrescuesystem.dto.CountOfPersonsByCategoryDto;
@@ -32,7 +23,6 @@ import com.safetynet.safetynetrescuesystem.dto.PersonInfoDto;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
-import com.safetynet.safetynetrescuesystem.service.GlobalData.Data;
 
 @Component
 public class DataFileReader {
@@ -104,11 +94,11 @@ public class DataFileReader {
 		return findInfopersonsByStationNumberDto;
 	}
 
-	public HashMap<String, ArrayList<ChildDto>> listOfChildren(@RequestParam String address)
+	public HashMap<String, ArrayList<ChildDto>> findListOfChildren(@RequestParam String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		int age = 0;
 		String category = null;
-		
+
 		HashMap<String, ArrayList<ChildDto>> listOfChildren = new HashMap<>();
 		ArrayList<ChildDto> listByAddress = new ArrayList<>();
 		Person personDto = new Person();
@@ -142,7 +132,19 @@ public class DataFileReader {
 		return listOfChildren;
 	}
 
-	public HashMap<String, ArrayList<AddressPersonsDto>> listByStation(@RequestParam String address)
+	public ArrayList<String> findAddressFireStationById(@RequestParam String station)
+			throws JsonParseException, JsonMappingException, IOException {
+		ArrayList<String> listOfFirestations = new ArrayList<String>();
+
+		for (Firestation firestation : globalData.getFirestations()) {
+			if (station.equals(firestation.getStation()))
+				listOfFirestations.add(firestation.getAddress());
+
+		}
+		return listOfFirestations;
+	}
+
+	public HashMap<String, ArrayList<AddressPersonsDto>> findListByStation(@RequestParam String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		int age = 0;
 		HashMap<String, ArrayList<AddressPersonsDto>> listByStation = new HashMap<>();
@@ -174,8 +176,8 @@ public class DataFileReader {
 								addressPersonsDto.setAllergies(medicalRecord.getAllergies());
 
 								listOfPersonByAddress.add(addressPersonsDto);
-								listByStation.put("station"+'"'+":"+'"'+firestation.getStation(), listOfPersonByAddress);
-
+								listByStation.put("station" + '"' + ":" + '"' + firestation.getStation(),
+										listOfPersonByAddress);
 							}
 					}
 				}
@@ -222,18 +224,6 @@ public class DataFileReader {
 		return listOfPersonByFirestations;
 	}
 
-	public ArrayList<String> findAddressFireStationById(@RequestParam String station)
-			throws JsonParseException, JsonMappingException, IOException {
-		ArrayList<String> listOfFirestations = new ArrayList<String>();
-
-		for (Firestation firestation : globalData.getFirestations()) {
-			if (station.equals(firestation.getStation()))
-				listOfFirestations.add(firestation.getAddress());
-
-		}
-		return listOfFirestations;
-	}
-
 	public ArrayList<String> findPersonsPhoneNumberByFireStationId(@RequestParam String station)
 			throws JsonParseException, JsonMappingException, IOException {
 		ArrayList<String> listOfPhoneNumbers = new ArrayList<String>();
@@ -248,21 +238,21 @@ public class DataFileReader {
 		return listOfPhoneNumbers;
 	}
 
-	public ArrayList<String> findMedicalRecordsByPerson(@PathVariable String lastNamePerson)
-			throws JsonParseException, JsonMappingException, IOException {
-
-		ArrayList<String> ListOfMedicalRecordsbyPerson = new ArrayList<String>();
-		for (MedicalRecord medicalrecord : globalData.getMedicalrecords()) {
-			if (lastNamePerson.equals(medicalrecord.getLastName())) {
-				ListOfMedicalRecordsbyPerson.add(medicalrecord.getFirstName());
-				ListOfMedicalRecordsbyPerson.add(medicalrecord.getLastName());
-				ListOfMedicalRecordsbyPerson.add(medicalrecord.getBirthdate());
-
-				return ListOfMedicalRecordsbyPerson;
-			}
-		}
-		return null;
-	}
+//	public ArrayList<String> findMedicalRecordsByPerson(@PathVariable String lastNamePerson)
+//			throws JsonParseException, JsonMappingException, IOException {
+//
+//		ArrayList<String> ListOfMedicalRecordsbyPerson = new ArrayList<String>();
+//		for (MedicalRecord medicalrecord : globalData.getMedicalrecords()) {
+//			if (lastNamePerson.equals(medicalrecord.getLastName())) {
+//				ListOfMedicalRecordsbyPerson.add(medicalrecord.getFirstName());
+//				ListOfMedicalRecordsbyPerson.add(medicalrecord.getLastName());
+//				ListOfMedicalRecordsbyPerson.add(medicalrecord.getBirthdate());
+//
+//				return ListOfMedicalRecordsbyPerson;
+//			}
+//		}
+//		return null;
+//	}
 
 	public ArrayList<String> findAddressOfpersonsByFirestation(@RequestParam String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
@@ -285,18 +275,18 @@ public class DataFileReader {
 		return AddressListOfPersonsByFirestations;
 	}
 
-	public ArrayList<String> findEmailByLastName(@RequestParam String Name)
-			throws JsonParseException, JsonMappingException, IOException {
+//	public ArrayList<String> findEmailByLastName(@RequestParam String Name)
+//			throws JsonParseException, JsonMappingException, IOException {
+//
+//		ArrayList<String> listEmails = new ArrayList<String>();
+//
+//		for (Person person : globalData.getPersons()) {
+//			if (Name.equals(person.getLastName()))
+//				listEmails.add(person.getEmail());
+//		}
+//		return listEmails;
 
-		ArrayList<String> listEmails = new ArrayList<String>();
-
-		for (Person person : globalData.getPersons()) {
-			if (Name.equals(person.getLastName()))
-				listEmails.add(person.getEmail());
-		}
-		return listEmails;
-
-	}
+//	}
 
 	public ArrayList<String> findEmailByCity(@RequestParam String city)
 			throws JsonParseException, JsonMappingException, IOException {
@@ -311,39 +301,6 @@ public class DataFileReader {
 		}
 		return listOfEmails;
 	}
-
-//	public HashMap<String, Object> findMedicationsByPerson(@RequestParam String lastName,
-//			@RequestParam String firstName) throws JsonParseException, JsonMappingException, IOException {
-//		HashMap<String, Object> listMedications = new HashMap<String, Object>();
-//
-//		for (MedicalRecord medicalrecords : globalData.getMedicalrecords()) {
-//			if (lastName.equals(medicalrecords.getLastName()) && (firstName.equals(medicalrecords.getFirstName())))
-//				listMedications.put(medicalrecords.getLastName(), medicalrecords.getMedications());
-//
-//		}
-//		return listMedications;
-//
-//	}
-
-//	public HashMap<String, Object> findAllergiesByPerson(@RequestParam String lastName)
-//			throws JsonParseException, JsonMappingException, IOException, ParseException {
-//
-//		HashMap<String, Object> listAllergies = new HashMap<String, Object>();
-//
-//		for (MedicalRecord medicalrecords : globalData.getMedicalrecords()) {
-//			// DataFileReader.calculOfageOfPerson();
-//			if (medicalrecords.getFullName().contains(lastName)) // &&
-//																	// (firstName.equals(medicalrecords.getFirstName())))
-//				for (Person person : globalData.getPersons()) {
-//					if (medicalrecords.getFullName().contains(lastName))
-//						listAllergies.put(person.getAddress(), person.getEmail());
-//				}
-//
-//			listAllergies.put(medicalrecords.getFullName(), medicalrecords.getAllergies());
-//
-//		}
-//		return listAllergies;
-//	}
 
 	public ArrayList<PersonInfoDto> findPersonInfoDto(String firstName, String lastName)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
@@ -444,60 +401,41 @@ public class DataFileReader {
 
 	}
 
-	public final int CountChildren(String firstName, String lastName)
-			throws JsonParseException, JsonMappingException, IOException, ParseException {
-
-		long age = 0;
-
-		LocalDate birthDate = null;
-		int countOfAdults = 0;
-		int countOfChildren = 0;
-		for (MedicalRecord medicalRecord : globalData.getMedicalrecords()) {
-
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-			birthDate = LocalDate.parse(medicalRecord.getBirthdate(), dtf);
-			LocalDate today = LocalDate.now(ZoneId.systemDefault());
-			age = ChronoUnit.YEARS.between(birthDate, today);
-			boolean child = age < 18;
-			String category = new String();
-
-			if (child == true) {
-				category = "child";
-				countOfChildren++;
-			} else {
-				category = "adult";
-				countOfAdults++;
-
-			}
-			if (lastName.equals(medicalRecord.getLastName()) && (firstName.equals(medicalRecord.getFirstName()))) {
-
-				System.out.println(medicalRecord.getLastName() + "/" + medicalRecord.getFirstName() + "/" + birthDate
-						+ "/" + age + "/" + category);
-
-				System.out.println(countOfChildren + "/" + countOfAdults);
-				return countOfChildren;
-			}
-		}
-		return 0;
-	}
-}
-
-//	public HashMap<String, Long> findChildrenInMedicalRecords() {
+//	public final int CountChildren(String firstName, String lastName)
+//			throws JsonParseException, JsonMappingException, IOException, ParseException {
 //
-//		HashMap<String, Long> AddressListOfPersonsByFirestations = new HashMap<>();
+//		long age = 0;
+//
+//		LocalDate birthDate = null;
+//		int countOfAdults = 0;
+//		int countOfChildren = 0;
 //		for (MedicalRecord medicalRecord : globalData.getMedicalrecords()) {
-//			if (address.equals(firestation.getAddress()))
-//				for (Person person : globalData.getPersons()) {
 //
-//					if (firestation.getAddress().equals(person.getAddress())) {
-//						AddressListOfPersonsByFirestations.add(firestation.getStation());
-//						AddressListOfPersonsByFirestations.add(person.getFirstName());
-//						AddressListOfPersonsByFirestations.add(person.getLastName());
-//						AddressListOfPersonsByFirestations.add(person.getAddress());
-//						AddressListOfPersonsByFirestations.add(person.getPhone());
+//			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+//			birthDate = LocalDate.parse(medicalRecord.getBirthdate(), dtf);
+//			LocalDate today = LocalDate.now(ZoneId.systemDefault());
+//			age = ChronoUnit.YEARS.between(birthDate, today);
+//			boolean child = age < 18;
+//			String category = new String();
 //
-//					}
-//				}
+//			if (child == true) {
+//				category = "child";
+//				countOfChildren++;
+//			} else {
+//				category = "adult";
+//				countOfAdults++;
+//
+//			}
+//			if (lastName.equals(medicalRecord.getLastName()) && (firstName.equals(medicalRecord.getFirstName()))) {
+//
+//				System.out.println(medicalRecord.getLastName() + "/" + medicalRecord.getFirstName() + "/" + birthDate
+//						+ "/" + age + "/" + category);
+//
+//				System.out.println(countOfChildren + "/" + countOfAdults);
+//				return countOfChildren;
+//			}
 //		}
-//		return AddressListOfPersonsByFirestations;
+//		return 0;
 //	}
+
+}
