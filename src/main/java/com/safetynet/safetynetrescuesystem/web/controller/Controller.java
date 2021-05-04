@@ -26,141 +26,123 @@ import com.safetynet.safetynetrescuesystem.dto.PersonInfoDto;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
-
-import com.safetynet.safetynetrescuesystem.service.DataFileReader;
-import com.safetynet.safetynetrescuesystem.service.FirestationEndpoint;
+import com.safetynet.safetynetrescuesystem.service.FirestationService;
 import com.safetynet.safetynetrescuesystem.service.GlobalData;
-import com.safetynet.safetynetrescuesystem.service.MedicalRecordEndpoint;
-import com.safetynet.safetynetrescuesystem.service.PersonEndpoint;
+import com.safetynet.safetynetrescuesystem.service.MedicalRecordService;
+import com.safetynet.safetynetrescuesystem.service.PersonService;
 
 @RestController
-public class PersonController {
+public class Controller {
 
 	@Autowired
 	private GlobalData globalData;
 
 	@Autowired
-	private DataFileReader dataFileReader;
+	private PersonService personService;
 	@Autowired
-	private PersonEndpoint personEndpoint;
+	private FirestationService firestationService;
 	@Autowired
-	private FirestationEndpoint firestationEndpoint;
-	@Autowired
-	private MedicalRecordEndpoint medicalRecordEndpoint;
+	private MedicalRecordService medicalRecordService;
 
 	@GetMapping(value = "/firestation")
 	public HashMap<Object, ArrayList<FirestationPersonsDto>> personsByfirestationsList(
 			@RequestParam(name = "stationNumber") String station)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.findInfopersonsByStationNumberDto(station);
+		return firestationService.findInfopersonsByStationNumberDto(station);
 	}
 
 	@GetMapping(value = "/childAlert")
 	public HashMap<String, ArrayList<ChildDto>> todo(@RequestParam("address") String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.findListOfChildren(address);
+		return personService.findListOfChildren(address);
 	}
 
 	@GetMapping(value = "/phoneAlert")
 	public ArrayList<String> getPersonEmaild(@RequestParam("firestation") String station)
 			throws JsonParseException, JsonMappingException, IOException {
-		return dataFileReader.findPersonsPhoneNumberByFireStationId(station);
+		return firestationService.findPersonsPhoneNumberByFireStationId(station);
 	}
 //todo : voir comment préciser la station
 	@GetMapping(value = "/fire")
 	public HashMap<String, ArrayList<AddressPersonsDto>> fire(@RequestParam("address") String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.findListByStation(address);
+		return firestationService.findListByStation(address);
 	}
 
 	@GetMapping(value = "flood/stations")
 	public ArrayList<AddressPersonsDto> firestationsList(@RequestParam("stations") String station)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		System.out.println(globalData.getFirestations());
-		return dataFileReader.findInfopersonsByFirestationDto(station);
+		return firestationService.findInfopersonsByFirestationDto(station);
 	}
 
 	@GetMapping(value = "/personInfo")
 	public ArrayList<PersonInfoDto> fgetAllergies(@RequestParam(name = "firstName") String firstName,
 			@RequestParam(name = "lastName") String lastName)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		return dataFileReader.findPersonInfoDto(firstName, lastName);
+		return personService.findPersonInfoDto(firstName, lastName);
 	}
 
 	@GetMapping(value = "/communityEmail")
 	public List<String> getPersonEmailByCity(@RequestParam(name = "city") String city)
 			throws JsonParseException, JsonMappingException, IOException {
 
-		return dataFileReader.findEmailByCity(city);
+		return personService.findEmailByCity(city);
 	}
 
-/////////////////////////////////
-//	@GetMapping(value = "/MedicalRecords/{lastNamePerson}")
-//	public ArrayList<String> MedicalRecordsList(@PathVariable("lastNamePerson") String lastNamePerson)
-//			throws JsonParseException, JsonMappingException, IOException {
-//
-//		return dataFileReader.findMedicalRecordsByPerson(lastNamePerson);
-//	}
-
-//	@GetMapping(value = "/email/{lastName}")
-//	public ArrayList<String> getPersonEmail(@PathVariable("lastName") String lastName)
-//			throws JsonParseException, JsonMappingException, IOException {
-//		return dataFileReader.findEmailByLastName(lastName);
-//	}
-/////////////////////////////////////////
 
 	@PostMapping(value = "/person")
 	public ResponseEntity<Person> postPerson(@RequestBody Person person)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return personEndpoint.postPerson(person);
+		return personService.postPerson(person);
 	}
 
 	@PutMapping(value = "/person")
 	public ResponseEntity<Person> putPerson(@RequestBody Person person)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return personEndpoint.putPerson(person);
+		return personService.putPerson(person);
 	}
 
 	@DeleteMapping(value = "/person")
 	public ResponseEntity<Person> deletePerson(@RequestBody Person person)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return personEndpoint.deletePerson(person);
+		return personService.deletePerson(person);
 	}
 
 	@PostMapping(value = "/firestation")
 	public ResponseEntity<Firestation> postFirestation(@RequestBody Firestation firestation)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return firestationEndpoint.postFirestation(firestation);
+		return firestationService.postFirestation(firestation);
 	}
 
 	@PutMapping(value = "/firestation")
 	public ResponseEntity<Firestation> putFirestation(@RequestBody Firestation firestation)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return firestationEndpoint.putFirestation(firestation);
+		return firestationService.putFirestation(firestation);
 	}
 
 	@DeleteMapping(value = "/firestation")
 	public ResponseEntity<Firestation> deleteFirestation(@RequestBody Firestation firestation)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return firestationEndpoint.deleteFirestation(firestation);
+		return firestationService.deleteFirestation(firestation);
 	}
 
 	@PostMapping(value = "/medicalRecord")
-	public ResponseEntity<MedicalRecord> postFirestation(@RequestBody MedicalRecord medicalRecord)
+	public MedicalRecord postFirestation(@RequestBody MedicalRecord medicalRecord)
 			throws JsonGenerationException, JsonMappingException, IOException {
 
-		return medicalRecordEndpoint.postMedicalRecord(medicalRecord);
+		return medicalRecordService.postMedicalRecord(medicalRecord);
 	}
 
 	@PutMapping(value = "/medicalRecord")
-	public ResponseEntity<MedicalRecord> putMedicalRecords(@RequestBody MedicalRecord medicalRecord)
+	public MedicalRecord putMedicalRecords(@RequestBody MedicalRecord medicalRecord)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return medicalRecordEndpoint.putMedicalRecord(medicalRecord);
+		return medicalRecordService.putMedicalRecord(medicalRecord);
 	}
 
 	@DeleteMapping(value = "/medicalRecord")
 	public ResponseEntity<MedicalRecord> deleteMedicalRecords(@RequestBody MedicalRecord medicalRecord)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return medicalRecordEndpoint.deleteMedicalRecord(medicalRecord);
+		return medicalRecordService.deleteMedicalRecord(medicalRecord);
 	}
 }
