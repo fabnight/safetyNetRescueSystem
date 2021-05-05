@@ -24,6 +24,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.safetynet.safetynetrescuesystem.dto.AddressPersonsDto;
 import com.safetynet.safetynetrescuesystem.dto.CountOfPersonsByCategoryDto;
+import com.safetynet.safetynetrescuesystem.dto.FirestationDto;
 import com.safetynet.safetynetrescuesystem.dto.FirestationPersonsDto;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
@@ -119,13 +120,14 @@ public class FirestationService {
 
 	// http://localhost:8080/fire?address=<address>
 
-	public HashMap<String, ArrayList<AddressPersonsDto>> findListByStation(String address)
+	public HashMap<Object, ArrayList<AddressPersonsDto>> findListByStation(String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		int age = 0;
-		HashMap<String, ArrayList<AddressPersonsDto>> listByStation = new HashMap<>();
+		HashMap<Object, ArrayList<AddressPersonsDto>> listByStation = new HashMap<>();
+	
+		FirestationDto stationDto = new FirestationDto();
 		ArrayList<AddressPersonsDto> listOfPersonByAddress = new ArrayList<>();
 		Person personDto = new Person();
-
 		for (Firestation firestation : globalData.getFirestations()) {
 			if (address.equals(firestation.getAddress()))
 				for (Person person : globalData.getPersons()) {
@@ -135,7 +137,7 @@ public class FirestationService {
 						personDto.setFirstName(person.getFirstName());
 						personDto.setLastName(person.getLastName());
 						personDto.setPhone(person.getPhone());
-
+						stationDto.setStation(firestation.getStation());
 						for (MedicalRecord medicalRecord : globalData.getMedicalrecords())
 							if (personDto.getLastName().equalsIgnoreCase(medicalRecord.getLastName())
 									&& (personDto.getFirstName().equalsIgnoreCase(medicalRecord.getFirstName()))) {
@@ -152,7 +154,7 @@ public class FirestationService {
 								addressPersonsDto.setAllergies(medicalRecord.getAllergies());
 
 								listOfPersonByAddress.add(addressPersonsDto);
-								listByStation.put("station" + '"' + ":" + '"' + firestation.getStation(),
+								listByStation.put(stationDto,
 										listOfPersonByAddress);
 							}
 					}
@@ -164,16 +166,21 @@ public class FirestationService {
 
 	// http://localhost:8080/flood/stations?stations=<a list of station_numbers>
 
-	public ArrayList<AddressPersonsDto> findInfopersonsByFirestationDto(String station)
+	public ArrayList<AddressPersonsDto> findInfopersonsByFirestationDto(List<String> stations)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		int age = 0;
+	
 		ArrayList<AddressPersonsDto> listOfPersonByFirestations = new ArrayList<>();
 		Person personDto = new Person();
 
-		for (Firestation firestation : globalData.getFirestations()) {
-			if (station.equals(firestation.getStation()))
+		for (Firestation firestation : globalData.getFirestations()) { 
+			for(String value : stations)
+				if (value.equals(firestation.getStation()))
+		
+			 {
+			if (value.equals(firestation.getStation()))
 				for (Person person : globalData.getPersons()) {
-
+					
 					if (firestation.getAddress().equals(person.getAddress())) {
 						personDto.setAddress(person.getAddress());
 						personDto.setFirstName(person.getFirstName());
@@ -199,10 +206,10 @@ public class FirestationService {
 					}
 				}
 		}
-
+		}
 		return listOfPersonByFirestations;
 	}
-
+	
 	public ResponseEntity<Firestation> postFirestation(@RequestBody Firestation firestation)
 			throws JsonGenerationException, JsonMappingException, IOException {
 		globalData.getFirestations().add(firestation);

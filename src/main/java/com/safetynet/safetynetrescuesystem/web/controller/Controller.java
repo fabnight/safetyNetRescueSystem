@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,16 +29,12 @@ import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
 import com.safetynet.safetynetrescuesystem.service.FirestationService;
-import com.safetynet.safetynetrescuesystem.service.GlobalData;
 import com.safetynet.safetynetrescuesystem.service.MedicalRecordService;
 import com.safetynet.safetynetrescuesystem.service.PersonService;
 
 @RestController
 public class Controller {
-
-	@Autowired
-	private GlobalData globalData;
-
+	private static final Logger logger = LogManager.getLogger(Controller.class);
 	@Autowired
 	private PersonService personService;
 	@Autowired
@@ -62,18 +60,17 @@ public class Controller {
 			throws JsonParseException, JsonMappingException, IOException {
 		return firestationService.findPersonsPhoneNumberByFireStationId(station);
 	}
-//todo : voir comment préciser la station
+
 	@GetMapping(value = "/fire")
-	public HashMap<String, ArrayList<AddressPersonsDto>> fire(@RequestParam("address") String address)
+	public HashMap<Object, ArrayList<AddressPersonsDto>> fire(@RequestParam("address") String address)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		return firestationService.findListByStation(address);
 	}
 
 	@GetMapping(value = "flood/stations")
-	public ArrayList<AddressPersonsDto> firestationsList(@RequestParam("stations") String station)
+	public ArrayList<AddressPersonsDto> firestationsList(@RequestParam(name = "stations") List<String> stations)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
-		System.out.println(globalData.getFirestations());
-		return firestationService.findInfopersonsByFirestationDto(station);
+		return firestationService.findInfopersonsByFirestationDto(stations);
 	}
 
 	@GetMapping(value = "/personInfo")
@@ -90,10 +87,10 @@ public class Controller {
 		return personService.findEmailByCity(city);
 	}
 
-
 	@PostMapping(value = "/person")
 	public ResponseEntity<Person> postPerson(@RequestBody Person person)
 			throws JsonGenerationException, JsonMappingException, IOException {
+		logger.info("new person created");
 		return personService.postPerson(person);
 	}
 
@@ -106,6 +103,7 @@ public class Controller {
 	@DeleteMapping(value = "/person")
 	public ResponseEntity<Person> deletePerson(@RequestBody Person person)
 			throws JsonGenerationException, JsonMappingException, IOException {
+		logger.info("person deleted");
 		return personService.deletePerson(person);
 	}
 
