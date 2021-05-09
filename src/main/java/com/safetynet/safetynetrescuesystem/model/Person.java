@@ -1,28 +1,18 @@
 package com.safetynet.safetynetrescuesystem.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 public class Person {
 
-	protected String firstName;
-	protected String lastName;
-	protected String address;
-	protected String city;
-	protected String zip;
-	protected String phone;
-	protected String email;
-	
-	
+	private String firstName;
+	private String lastName;
+	private String address;
+	private String city;
+	private String zip;
+	private String phone;
+	private String email;
 
-	// constructeur par défaut
 	public Person() {
 	}
 
-	// constructeur pour les tests
 	public Person(String firstName, String lastName, String address, String city, String zip, String phone,
 			String email) {
 		this.firstName = firstName;
@@ -32,7 +22,7 @@ public class Person {
 		this.zip = zip;
 		this.phone = phone;
 		this.email = email;
-		
+
 	}
 
 	public String getFirstName() {
@@ -97,6 +87,4 @@ public class Person {
 				+ ", city=" + city + '\'' + ", zip=" + zip + '\'' + ", phone=" + phone + ", email=" + email + '}';
 	}
 
-	
-	
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -15,13 +17,13 @@ import com.safetynet.safetynetrescuesystem.model.Person;
 
 @Service
 public final class GlobalData {
-
+	private static final Logger logger = LogManager.getLogger("FirestationService");
 	private List<Person> persons;
 	private List<Firestation> firestations;
 	private List<MedicalRecord> medicalrecords;
 
 	public GlobalData() {
-
+		
 		ObjectMapper mapper = new ObjectMapper();
 		Data globalData;
 		try {
@@ -29,14 +31,15 @@ public final class GlobalData {
 			this.persons = globalData.persons;
 			this.firestations = globalData.firestations;
 			this.medicalrecords = globalData.medicalrecords;
+			logger.info("ready to use data.json");
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
+			logger.error("unable to parse data.json",e);
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
+			logger.error("unable to map data.json",e);
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			logger.error("unable to find file data.json",e);
 			e.printStackTrace();
 		}
 

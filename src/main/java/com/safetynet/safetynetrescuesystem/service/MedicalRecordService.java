@@ -17,13 +17,27 @@ public class MedicalRecordService {
 	@Autowired
 	private GlobalData globalData;
 
-	public MedicalRecord postMedicalRecord(MedicalRecord medicalRecord) {
-		globalData.getMedicalrecords().add(medicalRecord);
-		System.out.println(globalData.getMedicalrecords());
-		return medicalRecord;
+	public ResponseEntity<MedicalRecord> postMedicalRecord(MedicalRecord medicalRecordToPost) {
+		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
+		final int sz = medicalRecords.size();
+
+		for (Integer i = 0; i < sz; i++) {
+
+			if (medicalRecordToPost.getLastName().equals(medicalRecords.get(i).getLastName())
+					&& medicalRecordToPost.getFirstName().equals(medicalRecords.get(i).getFirstName())) {
+				medicalRecordToPost = medicalRecords.get(i);
+				logger.error(
+						"This person has already got medical records in database, please use a PUT query if you want to amend its medicalrecords");
+				return new ResponseEntity<MedicalRecord>(medicalRecordToPost, HttpStatus.CONFLICT);
+			} else if (i == medicalRecords.size() - 1) {
+				globalData.getMedicalrecords().add(medicalRecordToPost);
+				logger.info("new medical records created");
+			}
+		}
+		return new ResponseEntity<>(medicalRecordToPost, HttpStatus.CREATED);
 	}
 
-	public MedicalRecord putMedicalRecord(MedicalRecord medicalRecord) {
+	public ResponseEntity<MedicalRecord> putMedicalRecord(MedicalRecord medicalRecord) {
 
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
 		MedicalRecord medicalRecordToUpdate = null;
@@ -42,10 +56,12 @@ public class MedicalRecordService {
 			medicalRecordToUpdate.setMedications(medicalRecord.getMedications());
 			medicalRecordToUpdate.setAllergies(medicalRecord.getAllergies());
 
-			System.out.println(globalData.getMedicalrecords());
+			logger.info("medical records amended");
+			return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.OK);
 
 		}
-		return medicalRecord;
+		logger.info("person to update not found, please check firstname and lastname");
+		return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<MedicalRecord> deleteMedicalRecord(MedicalRecord medicalRecord) {
@@ -64,10 +80,11 @@ public class MedicalRecordService {
 		}
 		if (medicalRecordToDelete != null) {
 			medicalRecords.remove(medicalRecordToDelete);
-			System.out.println(globalData.getMedicalrecords());
+			logger.info("Medical records are now deleted");
 			return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.OK);
 
 		}
+		logger.info("person to delete medical records not found");
 		return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.BAD_REQUEST);
 	}
 }

@@ -81,17 +81,15 @@ public class Controller {
 	}
 
 	@GetMapping(value = "/communityEmail")
-	public List<String> getPersonEmailByCity(@RequestParam(name = "city") String city)
-			throws JsonParseException, JsonMappingException, IOException {
+	public List<String> getPersonEmailByCity(@RequestParam(name = "city") String city) {
 
 		return personService.findEmailByCity(city);
 	}
 
 	@PostMapping(value = "/person")
-	public ResponseEntity<Person> postPerson(@RequestBody Person person)
+	public ResponseEntity<Person> postPerson(@RequestBody Person personToPost)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		logger.info("new person created");
-		return personService.postPerson(person);
+		return personService.postPerson(personToPost);
 	}
 
 	@PutMapping(value = "/person")
@@ -108,9 +106,9 @@ public class Controller {
 	}
 
 	@PostMapping(value = "/firestation")
-	public ResponseEntity<Firestation> postFirestation(@RequestBody Firestation firestation)
+	public ResponseEntity<Firestation> postFirestation(@RequestBody Firestation firestationToPost)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		return firestationService.postFirestation(firestation);
+		return firestationService.postFirestation(firestationToPost);
 	}
 
 	@PutMapping(value = "/firestation")
@@ -126,14 +124,14 @@ public class Controller {
 	}
 
 	@PostMapping(value = "/medicalRecord")
-	public MedicalRecord postFirestation(@RequestBody MedicalRecord medicalRecord)
+	public ResponseEntity<MedicalRecord> postFirestation(@RequestBody MedicalRecord medicalRecordToPost)
 			throws JsonGenerationException, JsonMappingException, IOException {
 
-		return medicalRecordService.postMedicalRecord(medicalRecord);
+		return medicalRecordService.postMedicalRecord(medicalRecordToPost);
 	}
 
 	@PutMapping(value = "/medicalRecord")
-	public MedicalRecord putMedicalRecords(@RequestBody MedicalRecord medicalRecord)
+	public ResponseEntity<MedicalRecord> putMedicalRecords(@RequestBody MedicalRecord medicalRecord)
 			throws JsonGenerationException, JsonMappingException, IOException {
 		return medicalRecordService.putMedicalRecord(medicalRecord);
 	}

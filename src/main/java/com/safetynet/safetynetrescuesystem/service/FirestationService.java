@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -124,7 +123,7 @@ public class FirestationService {
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		int age = 0;
 		HashMap<Object, ArrayList<AddressPersonsDto>> listByStation = new HashMap<>();
-	
+
 		FirestationDto stationDto = new FirestationDto();
 		ArrayList<AddressPersonsDto> listOfPersonByAddress = new ArrayList<>();
 		Person personDto = new Person();
@@ -154,8 +153,7 @@ public class FirestationService {
 								addressPersonsDto.setAllergies(medicalRecord.getAllergies());
 
 								listOfPersonByAddress.add(addressPersonsDto);
-								listByStation.put(stationDto,
-										listOfPersonByAddress);
+								listByStation.put(stationDto, listOfPersonByAddress);
 							}
 					}
 				}
@@ -169,55 +167,71 @@ public class FirestationService {
 	public ArrayList<AddressPersonsDto> findInfopersonsByFirestationDto(List<String> stations)
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		int age = 0;
-	
+
 		ArrayList<AddressPersonsDto> listOfPersonByFirestations = new ArrayList<>();
 		Person personDto = new Person();
 
-		for (Firestation firestation : globalData.getFirestations()) { 
-			for(String value : stations)
+		for (Firestation firestation : globalData.getFirestations()) {
+			for (String value : stations)
 				if (value.equals(firestation.getStation()))
-		
-			 {
-			if (value.equals(firestation.getStation()))
-				for (Person person : globalData.getPersons()) {
-					
-					if (firestation.getAddress().equals(person.getAddress())) {
-						personDto.setAddress(person.getAddress());
-						personDto.setFirstName(person.getFirstName());
-						personDto.setLastName(person.getLastName());
-						personDto.setPhone(person.getPhone());
 
-						for (MedicalRecord medicalRecord : globalData.getMedicalrecords())
-							if (personDto.getLastName().equalsIgnoreCase(medicalRecord.getLastName())
-									&& (personDto.getFirstName().equalsIgnoreCase(medicalRecord.getFirstName()))) {
+				{
+					if (value.equals(firestation.getStation()))
+						for (Person person : globalData.getPersons()) {
 
-								AddressPersonsDto addressPersonsDto = new AddressPersonsDto();
+							if (firestation.getAddress().equals(person.getAddress())) {
+								personDto.setAddress(person.getAddress());
+								personDto.setFirstName(person.getFirstName());
+								personDto.setLastName(person.getLastName());
+								personDto.setPhone(person.getPhone());
 
-								ModelMapper modelMapper = new ModelMapper();
-								addressPersonsDto = modelMapper.map(personDto, AddressPersonsDto.class);
+								for (MedicalRecord medicalRecord : globalData.getMedicalrecords())
+									if (personDto.getLastName().equalsIgnoreCase(medicalRecord.getLastName())
+											&& (personDto.getFirstName()
+													.equalsIgnoreCase(medicalRecord.getFirstName()))) {
 
-								age = personService.calculOfAgeByPerson(medicalRecord.getFirstName(),
-										medicalRecord.getLastName());
-								addressPersonsDto.setAge(age);
-								addressPersonsDto.setMedications(medicalRecord.getMedications());
-								addressPersonsDto.setAllergies(medicalRecord.getAllergies());
-								listOfPersonByFirestations.add(addressPersonsDto);
+										AddressPersonsDto addressPersonsDto = new AddressPersonsDto();
+
+										ModelMapper modelMapper = new ModelMapper();
+										addressPersonsDto = modelMapper.map(personDto, AddressPersonsDto.class);
+
+										age = personService.calculOfAgeByPerson(medicalRecord.getFirstName(),
+												medicalRecord.getLastName());
+										addressPersonsDto.setAge(age);
+										addressPersonsDto.setMedications(medicalRecord.getMedications());
+										addressPersonsDto.setAllergies(medicalRecord.getAllergies());
+										listOfPersonByFirestations.add(addressPersonsDto);
+									}
 							}
-					}
+						}
 				}
-		}
 		}
 		return listOfPersonByFirestations;
 	}
-	
-	public ResponseEntity<Firestation> postFirestation(@RequestBody Firestation firestation)
+
+	public ResponseEntity<Firestation> postFirestation(Firestation firestationToPost)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		globalData.getFirestations().add(firestation);
-		System.out.println(globalData.getFirestations());
-		return new ResponseEntity<Firestation>(firestation, HttpStatus.CREATED);
+		List<Firestation> firestations = globalData.getFirestations();
+		final int sz = firestations.size();
+		for (Integer i = 0; i < sz; i++) {
+
+			if (firestationToPost.getAddress().equals(firestations.get(i).getAddress())
+					|| firestationToPost.getStation().equals(firestations.get(i).getStation())) {
+				firestationToPost = firestations.get(i);
+				logger.error(
+						"This firestation was already found in database, please use a PUT query if you want to amend this firestation");
+				return new ResponseEntity<Firestation>(firestationToPost, HttpStatus.CONFLICT);
+			} else if (i == firestations.size() - 1) {
+
+				globalData.getFirestations().add(firestationToPost);
+				logger.info("new firestation created");
+
+			}
+		}
+		return new ResponseEntity<Firestation>(firestationToPost, HttpStatus.CREATED);
 	}
 
-	public ResponseEntity<Firestation> putFirestation(@RequestBody Firestation firestation)
+	public ResponseEntity<Firestation> putFirestation(Firestation firestation)
 			throws JsonGenerationException, JsonMappingException, IOException {
 
 		List<Firestation> firestations = globalData.getFirestations();
@@ -232,32 +246,35 @@ public class FirestationService {
 		}
 		if (stationToUpdate != null) {
 			stationToUpdate.setStation(firestation.getStation());
-			System.out.println(globalData.getFirestations());
+			logger.info("firestation is amended");
 			return new ResponseEntity<Firestation>(firestation, HttpStatus.OK);
 
 		}
+		logger.error("This firestation was not found in database, please check the adrress");
 		return new ResponseEntity<Firestation>(firestation, HttpStatus.BAD_REQUEST);
+
 	}
 
-	public ResponseEntity<Firestation> deleteFirestation(@RequestBody Firestation firestation)
+	public ResponseEntity<Firestation> deleteFirestation(Firestation firestation)
 			throws JsonGenerationException, JsonMappingException, IOException {
 
 		List<Firestation> firestations = globalData.getFirestations();
-		Firestation stationToDelete = null;
+		Firestation firestationToDelete = null;
+		for (Integer i = 0; i < firestations.size() && firestationToDelete == null; i++) {
 
-		for (Integer i = 0; i < firestations.size() && stationToDelete == null; i++) {
-
-			if (firestation.getStation().equals(firestations.get(i).getStation())) {
-				stationToDelete = firestations.get(i);
+			if (firestation.getAddress().equals(firestations.get(i).getAddress())
+					&& firestation.getStation().equals(firestations.get(i).getStation())) {
+				firestationToDelete = firestations.get(i);
 			}
 
 		}
-		if (stationToDelete != null) {
-			firestations.remove(stationToDelete);
-			System.out.println(globalData.getFirestations());
-			return new ResponseEntity<Firestation>(firestation, HttpStatus.OK);
+		if (firestationToDelete != null) {
+			firestations.remove(firestationToDelete);
+			logger.info("firestation is deleted");
+			return new ResponseEntity<Firestation>(firestationToDelete, HttpStatus.OK);
 
 		}
-		return new ResponseEntity<Firestation>(firestation, HttpStatus.BAD_REQUEST);
+		logger.error("This firestation was not found in database, please check the station number and the address");
+		return new ResponseEntity<Firestation>(firestationToDelete, HttpStatus.BAD_REQUEST);
 	}
 }
