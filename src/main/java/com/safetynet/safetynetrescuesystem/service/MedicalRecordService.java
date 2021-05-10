@@ -17,6 +17,7 @@ public class MedicalRecordService {
 	@Autowired
 	private GlobalData globalData;
 
+	//POST
 	public ResponseEntity<MedicalRecord> postMedicalRecord(MedicalRecord medicalRecordToPost) {
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
 		final int sz = medicalRecords.size();
@@ -37,6 +38,7 @@ public class MedicalRecordService {
 		return new ResponseEntity<>(medicalRecordToPost, HttpStatus.CREATED);
 	}
 
+	//PUT
 	public ResponseEntity<MedicalRecord> putMedicalRecord(MedicalRecord medicalRecord) {
 
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
@@ -60,10 +62,11 @@ public class MedicalRecordService {
 			return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.OK);
 
 		}
-		logger.info("person to update not found, please check firstname and lastname");
+		logger.error("person to update not found, please check firstname and lastname");
 		return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.BAD_REQUEST);
 	}
 
+	//DELETE
 	public ResponseEntity<MedicalRecord> deleteMedicalRecord(MedicalRecord medicalRecord) {
 
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
@@ -84,7 +87,7 @@ public class MedicalRecordService {
 			return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.OK);
 
 		}
-		logger.info("person to delete medical records not found");
+		logger.error("person to delete medical records not found");
 		return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.BAD_REQUEST);
 	}
 }
