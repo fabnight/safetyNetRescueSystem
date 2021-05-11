@@ -42,12 +42,12 @@ public class Controller {
 	}
 
 	@GetMapping(value = "/childAlert")
-	public HashMap<String, ArrayList<ChildDto>> todo(@RequestParam("address") String address) {
+	public HashMap<String, ArrayList<ChildDto>> getChildrenByAdress(@RequestParam("address") String address) {
 		return personService.findListOfChildren(address);
 	}
 
 	@GetMapping(value = "/phoneAlert")
-	public ArrayList<String> getPersonEmaild(@RequestParam("firestation") String station) {
+	public ArrayList<String> getPersonPhone(@RequestParam("firestation") String station) {
 		return firestationService.findPersonsPhoneNumberByFireStationId(station);
 	}
 

@@ -222,19 +222,12 @@ public class PersonService {
 			birthDate = LocalDate.parse(medicalRecord.getBirthdate(), dtf);
 			LocalDate today = LocalDate.now(ZoneId.systemDefault());
 			age = (int) ChronoUnit.YEARS.between(birthDate, today);
-
-//			boolean child = age < 18;
-//			String category = new String();
+			
 			if (lastName.equals(medicalRecord.getLastName()) && (firstName.equals(medicalRecord.getFirstName()))) {
-//
-//				if (child == true)
-//					category = "child";
-//				else
-//					category = "adult";
-
+				if (age<0){ logger.error("Found a birthDate "+birthDate+ " that is not correct, please amend for a past date.");}
+				
 				return age;
 			}
-
 		}
 		return 0;
 	}
