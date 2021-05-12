@@ -45,8 +45,10 @@ class ControllerTest {
 //
 	@Test
 	void testGetPersonEmailByCity() throws Exception {
-		mockMvc.perform(get("/communityEmail").contentType(MediaType.APPLICATION_JSON).param("city", "Culver")
-				.content("{\"address\":\"1509 Culver St\",\"station\":\"3\"}")).andExpect(status().isOk());
+		mockMvc.perform(
+				get("/communityEmail")
+				.param("city", "Culver"))
+				.andExpect(status().isOk());
 	}
 
 //
@@ -57,17 +59,17 @@ class ControllerTest {
 //
 	@Test
 	void testFirestationsList() throws Exception {
-		mockMvc.perform(get("/flood/firestation").contentType(MediaType.APPLICATION_JSON).param("stationNumber", "3,2")
-				.content("{\"address\":\"1509 Culver St\",\"station\":\"3\"}")).andExpect(status().isOk());
+		mockMvc.perform(get("/flood/stations").contentType(MediaType.APPLICATION_JSON).param("stations", "2,3"))
+				.andExpect(status().isOk());
 
 	}
 
 	@Test
 	void testFirestations() throws Exception {
-		mockMvc.perform(get("/firestation").contentType(MediaType.APPLICATION_JSON).param("stationNumber", "2")
+		mockMvc.perform(get("/firestation").contentType(MediaType.APPLICATION_JSON).param("stationNumber", "2"))
 
-				.content("{\"station\":\"2\"}")).andExpect(status().isOk());
-		// .andExpect(content().string(containsString("Zemicks")));
+				.andExpect(status().isOk());
+		 
 	}
 //
 
