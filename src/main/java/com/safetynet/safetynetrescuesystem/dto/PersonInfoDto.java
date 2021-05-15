@@ -5,11 +5,14 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * 
+ * @see PersonService
+ *
+ */
 @Service
 public class PersonInfoDto implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	String lastName;

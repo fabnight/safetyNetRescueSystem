@@ -8,13 +8,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
 import com.safetynet.safetynetrescuesystem.model.MedicalRecord;
 import com.safetynet.safetynetrescuesystem.model.Person;
 
+
+
+/**
+ * Singleton to parse the json file into persons,firestations, medicalrecords
+ * 
+ * @see ressource data.json
+ *
+ */
 @Service
 public final class GlobalData {
 	private static final Logger logger = LogManager.getLogger("FirestationService");

@@ -37,19 +37,19 @@ public class PersonService {
 			ArrayList<ChildDto> listByAddress = new ArrayList<>();
 
 			Person personDto = new Person();
-
+			// find if the address in parameters match to person addresses
 			for (Person person : globalData.getPersons()) {
 				if (address.equals(person.getAddress())) {
 
 					personDto.setFirstName(person.getFirstName());
 					personDto.setLastName(person.getLastName());
-
+					// find if firstname+lastname match to find birthdate in medicalrecords
 					for (MedicalRecord medicalRecord : globalData.getMedicalrecords())
 						if (personDto.getLastName().equalsIgnoreCase(medicalRecord.getLastName())
 								&& (personDto.getFirstName().equalsIgnoreCase(medicalRecord.getFirstName()))) {
 
 							ChildDto childDto = new ChildDto();
-
+							// add age and category of age
 							ModelMapper modelMapper = new ModelMapper();
 							childDto = modelMapper.map(personDto, ChildDto.class);
 							age = calculOfAgeByPerson(medicalRecord.getFirstName(), medicalRecord.getLastName());
@@ -84,7 +84,8 @@ public class PersonService {
 			personDto.setLastName(lastName);
 
 			for (MedicalRecord medicalRecord : globalData.getMedicalrecords()) {
-
+				// find if firstname+lastname in parameters match to find medical details in
+				// medicalrecords data
 				if (personDto.getLastName().equalsIgnoreCase(medicalRecord.getLastName())) {
 
 					PersonInfoDto personInfoDto = new PersonInfoDto();
@@ -112,7 +113,7 @@ public class PersonService {
 			logger.error("unable to access to the data file", ex);
 
 		} finally {
-			logger.info("childAlert executed with success");
+			logger.info("personInfo executed with success");
 		}
 		return personInfoDtoList;
 	}
@@ -144,7 +145,7 @@ public class PersonService {
 		final int sz = persons.size();
 		Integer i = 0;
 		for (i = 0; i < sz; i++)
-
+			// check if firstName + LastName are not already in persons data
 			if (personToPost.getLastName().equals(persons.get(i).getLastName())
 					&& personToPost.getFirstName().equals(persons.get(i).getFirstName())) {
 				personToPost = persons.get(i);
@@ -167,7 +168,7 @@ public class PersonService {
 		Person personToUpdate = null;
 
 		for (Integer i = 0; i < persons.size() && personToUpdate == null; i++) {
-
+			// check that firstName + LastName are well already in persons data
 			if (person.getLastName().equals(persons.get(i).getLastName())
 					&& person.getFirstName().equals(persons.get(i).getFirstName())) {
 				personToUpdate = persons.get(i);
@@ -188,15 +189,15 @@ public class PersonService {
 		return new ResponseEntity<Person>(person, HttpStatus.BAD_REQUEST);
 
 	}
-	
+
 //DELETE
-	public ResponseEntity<Person> deletePerson(Person person) throws Exception{
+	public ResponseEntity<Person> deletePerson(Person person) throws Exception {
 
 		List<Person> persons = globalData.getPersons();
 		Person personToDelete = null;
 
 		for (Integer i = 0; i < persons.size() && personToDelete == null; i++) {
-
+			// check that firstName + LastName are well already in persons data
 			if (person.getLastName().equals(persons.get(i).getLastName())
 					&& person.getFirstName().equals(persons.get(i).getFirstName())) {
 				personToDelete = persons.get(i);
@@ -213,6 +214,7 @@ public class PersonService {
 		return new ResponseEntity<Person>(person, HttpStatus.BAD_REQUEST);
 	}
 
+	// method to calculate age of a person with the birthdate
 	public int calculOfAgeByPerson(String firstName, String lastName) {
 
 		int age = 0;
@@ -224,16 +226,20 @@ public class PersonService {
 			birthDate = LocalDate.parse(medicalRecord.getBirthdate(), dtf);
 			LocalDate today = LocalDate.now(ZoneId.systemDefault());
 			age = (int) ChronoUnit.YEARS.between(birthDate, today);
-			
+
 			if (lastName.equals(medicalRecord.getLastName()) && (firstName.equals(medicalRecord.getFirstName()))) {
-				if (age<0){ logger.error("Found a birthDate "+birthDate+ " that is not correct, please amend for a past date.");}
-				
+				if (age < 0) {
+					logger.error(
+							"Found a birthDate " + birthDate + " that is not correct, please amend for a past date.");
+				}
+
 				return age;
 			}
 		}
 		return 0;
 	}
 
+	// method to find with the birthdate if a person is adult or child(age<18)
 	public String findCategoryOfAgeByPerson(String firstName, String lastName) {
 
 		long age = 0;

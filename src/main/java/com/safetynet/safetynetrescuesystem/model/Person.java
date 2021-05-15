@@ -1,5 +1,11 @@
 package com.safetynet.safetynetrescuesystem.model;
 
+/**
+ * Defines a resident peron with its complete address and contact details
+ * 
+ * @see ressource data.json
+ *
+ */
 public class Person {
 
 	private String firstName;

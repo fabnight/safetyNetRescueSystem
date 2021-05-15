@@ -38,7 +38,7 @@ class MedicalRecordServiceTest {
 		medicalRecord.setAllergies(allergies);
 
 		medicalRecordService.postMedicalRecord(medicalRecord);
-		
+
 		assertEquals(globalData.getMedicalrecords().get(globalData.getMedicalrecords().size() - 1).getLastName(),
 				medicalRecord.getLastName());
 	}

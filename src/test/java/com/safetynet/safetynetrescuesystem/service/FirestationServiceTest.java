@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.safetynet.safetynetrescuesystem.dto.AddressPersonsDto;
 import com.safetynet.safetynetrescuesystem.dto.FirestationPersonsDto;
 import com.safetynet.safetynetrescuesystem.model.Firestation;
-import com.safetynet.safetynetrescuesystem.model.Person;
 
 @Service
 @SpringBootTest
@@ -67,7 +66,8 @@ public class FirestationServiceTest {
 
 		firestationService.postFirestation(firestation);
 
-		assertEquals(globalData.getFirestations().get(13).getAddress(), firestation.getAddress());
+		assertEquals(globalData.getFirestations().get(globalData.getFirestations().size() - 1).getAddress(),
+				firestation.getAddress());
 
 	}
 

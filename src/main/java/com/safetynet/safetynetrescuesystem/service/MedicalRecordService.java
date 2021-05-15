@@ -17,13 +17,13 @@ public class MedicalRecordService {
 	@Autowired
 	private GlobalData globalData;
 
-	//POST
+	// POST
 	public ResponseEntity<MedicalRecord> postMedicalRecord(MedicalRecord medicalRecordToPost) {
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
 		final int sz = medicalRecords.size();
 
 		for (Integer i = 0; i < sz; i++) {
-
+			// check if firstName + LastName are not already in medicalrecords data
 			if (medicalRecordToPost.getLastName().equals(medicalRecords.get(i).getLastName())
 					&& medicalRecordToPost.getFirstName().equals(medicalRecords.get(i).getFirstName())) {
 				medicalRecordToPost = medicalRecords.get(i);
@@ -38,14 +38,14 @@ public class MedicalRecordService {
 		return new ResponseEntity<>(medicalRecordToPost, HttpStatus.CREATED);
 	}
 
-	//PUT
+	// PUT
 	public ResponseEntity<MedicalRecord> putMedicalRecord(MedicalRecord medicalRecord) throws Exception {
 
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
 		MedicalRecord medicalRecordToUpdate = null;
 
 		for (Integer i = 0; i < medicalRecords.size() && medicalRecordToUpdate == null; i++) {
-
+			// check that firstName + LastName are well already in medicalrecords data
 			if (medicalRecord.getLastName().equals(medicalRecords.get(i).getLastName())
 					&& medicalRecord.getFirstName().equals(medicalRecords.get(i).getFirstName())) {
 				medicalRecordToUpdate = medicalRecords.get(i);
@@ -66,14 +66,14 @@ public class MedicalRecordService {
 		return new ResponseEntity<MedicalRecord>(medicalRecord, HttpStatus.BAD_REQUEST);
 	}
 
-	//DELETE
-	public ResponseEntity<MedicalRecord> deleteMedicalRecord(MedicalRecord medicalRecord) throws Exception{
+	// DELETE
+	public ResponseEntity<MedicalRecord> deleteMedicalRecord(MedicalRecord medicalRecord) throws Exception {
 
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
 		MedicalRecord medicalRecordToDelete = null;
 
 		for (Integer i = 0; i < medicalRecords.size() && medicalRecordToDelete == null; i++) {
-
+			// check that firstName + LastName are well already in medicalrecords data
 			if (medicalRecord.getLastName().equals(medicalRecords.get(i).getLastName())
 					&& medicalRecord.getFirstName().equals(medicalRecords.get(i).getFirstName())) {
 				medicalRecordToDelete = medicalRecords.get(i);

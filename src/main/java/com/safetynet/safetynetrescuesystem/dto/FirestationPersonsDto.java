@@ -4,11 +4,14 @@ import java.io.Serializable;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * 
+ * @see FirestationService
+ *
+ */
 @Service
 public class FirestationPersonsDto implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	String firstName;
@@ -73,6 +76,6 @@ public class FirestationPersonsDto implements Serializable {
 	@Override
 	public String toString() {
 		return "AddressPersonsDto {firstName=\" + firstName + \" lastName=" + lastName
-				+ ",\"address=\" + address + \", phone=\" + phone+\",category=\" + category"+"}";
+				+ ",\"address=\" + address + \", phone=\" + phone+\",category=\" + category" + "}";
 	}
 }

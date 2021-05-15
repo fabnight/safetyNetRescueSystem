@@ -25,6 +25,13 @@ import com.safetynet.safetynetrescuesystem.service.FirestationService;
 import com.safetynet.safetynetrescuesystem.service.MedicalRecordService;
 import com.safetynet.safetynetrescuesystem.service.PersonService;
 
+/**
+ * Is the rest controller for the API
+ * 
+ * @see ressource data.json
+ * @see com.safetynet.safetynetrescuesystem.service
+ * @See README.md for the documentation of the endpoints
+ */
 @RestController
 public class Controller {
 
@@ -116,7 +123,8 @@ public class Controller {
 	}
 
 	@DeleteMapping(value = "/medicalRecord")
-	public ResponseEntity<MedicalRecord> deleteMedicalRecords(@RequestBody MedicalRecord medicalRecord) throws Exception{
+	public ResponseEntity<MedicalRecord> deleteMedicalRecords(@RequestBody MedicalRecord medicalRecord)
+			throws Exception {
 		return medicalRecordService.deleteMedicalRecord(medicalRecord);
 	}
 }

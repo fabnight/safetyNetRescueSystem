@@ -1,12 +1,12 @@
 package com.safetynet.safetynetrescuesystem.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -92,7 +92,8 @@ public class PersonServiceTest {
 
 		personService.postPerson(person);
 
-		assertEquals(globalData.getPersons().get(globalData.getPersons().size()-1).getLastName(),person.getLastName());
+		assertEquals(
+				globalData.getPersons().get(globalData.getPersons().size() - 1).getLastName(),person.getLastName());
 	}
 
 	@Test
@@ -161,7 +162,7 @@ public class PersonServiceTest {
 
 			e.printStackTrace();
 
-			assertEquals("person to delete not found?, please check firstname and lastname", e.getMessage());
+			assertEquals("person to delete not found, please check firstname and lastname", e.getMessage());
 		}
 	}
 
