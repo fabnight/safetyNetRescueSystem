@@ -1,14 +1,10 @@
 package com.safetynet.safetynetrescuesystem.web.controller;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetrescuesystem.service.FirestationService;
 import com.safetynet.safetynetrescuesystem.service.MedicalRecordService;
 import com.safetynet.safetynetrescuesystem.service.PersonService;
@@ -33,8 +28,6 @@ class ControllerTest {
 	private PersonService personService;
 	@MockBean
 	private MedicalRecordService medicalRecordService;
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	@Test
 	void testFirestation() throws Exception {
@@ -46,7 +39,7 @@ class ControllerTest {
 	@Test
 	void testgetChildrenByAdress() throws Exception {
 		mockMvc.perform(get("/childAlert").contentType(MediaType.APPLICATION_JSON).param("address", "1509 Culver St"))
-		.andExpect(status().isOk());
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -76,8 +69,8 @@ class ControllerTest {
 
 	@Test
 	void testgetAllergies() throws Exception {
-		mockMvc.perform(get("/personInfo").contentType(MediaType.APPLICATION_JSON).param("firstName","John").param("lastName","Boyd"))
-				.andExpect(status().isOk());
+		mockMvc.perform(get("/personInfo").contentType(MediaType.APPLICATION_JSON).param("firstName", "John")
+				.param("lastName", "Boyd")).andExpect(status().isOk());
 	}
 
 //
