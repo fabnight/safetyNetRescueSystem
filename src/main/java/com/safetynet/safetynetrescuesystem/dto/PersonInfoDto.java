@@ -1,7 +1,8 @@
 package com.safetynet.safetynetrescuesystem.dto;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,14 +17,14 @@ public class PersonInfoDto implements Serializable {
 	String address;
 	long age;
 	String email;
-	List<String> medications;
-	List<String> allergies;
+	ArrayList<String> medications;
+	ArrayList<String> allergies;
 
 	public PersonInfoDto() {
 	}
 
 	public PersonInfoDto(String lastName, String firstName, String address, long age, String email,
-			List<String> medications, List<String> allergies) {
+			ArrayList<String> medications, ArrayList<String> allergies) {
 
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -74,19 +75,19 @@ public class PersonInfoDto implements Serializable {
 		this.email = email;
 	}
 
-	public List<String> getMedications() {
+	public ArrayList<String> getMedications() {
 		return medications;
 	}
 
-	public void setMedications(List<String> medications) {
+	public void setMedications(ArrayList<String> medications) {
 		this.medications = medications;
 	}
 
-	public List<String> getAllergies() {
+	public ArrayList<String> getAllergies() {
 		return allergies;
 	}
 
-	public void setAllergies(List<String> allergies) {
+	public void setAllergies(ArrayList<String> allergies) {
 		this.allergies = allergies;
 	}
 

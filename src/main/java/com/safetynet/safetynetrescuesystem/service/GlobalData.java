@@ -23,7 +23,7 @@ public final class GlobalData {
 	private List<MedicalRecord> medicalrecords;
 
 	public GlobalData() {
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		Data globalData;
 		try {
@@ -32,14 +32,8 @@ public final class GlobalData {
 			this.firestations = globalData.firestations;
 			this.medicalrecords = globalData.medicalrecords;
 			logger.info("ready to use data.json");
-		} catch (JsonParseException e) {
-			logger.error("unable to parse data.json",e);
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			logger.error("unable to map data.json",e);
-			e.printStackTrace();
 		} catch (IOException e) {
-			logger.error("unable to find file data.json",e);
+			logger.error("unable to use data.json", e);
 			e.printStackTrace();
 		}
 

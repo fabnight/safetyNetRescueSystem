@@ -72,8 +72,7 @@ public class FirestationPersonsDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AddressPersonsDto [address=" + address + ",[{ lastName=" + lastName
-				+ ",firstName=\" + firstName + \", medications=\" + medications + \", \"age=\" + age + \", phone=\" + phone"
-				+ "+ \"]}]";
+		return "AddressPersonsDto {firstName=\" + firstName + \" lastName=" + lastName
+				+ ",\"address=\" + address + \", phone=\" + phone+\",category=\" + category"+"}";
 	}
 }

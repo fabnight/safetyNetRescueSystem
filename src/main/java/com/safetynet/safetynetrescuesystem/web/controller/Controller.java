@@ -62,7 +62,7 @@ public class Controller {
 	}
 
 	@GetMapping(value = "/personInfo")
-	public ArrayList<PersonInfoDto> fgetAllergies(@RequestParam(name = "firstName") String firstName,
+	public ArrayList<PersonInfoDto> getAllergies(@RequestParam(name = "firstName") String firstName,
 			@RequestParam(name = "lastName") String lastName) {
 		return personService.findPersonInfoDto(firstName, lastName);
 	}
@@ -79,12 +79,12 @@ public class Controller {
 	}
 
 	@PutMapping(value = "/person")
-	public ResponseEntity<Person> putPerson(@RequestBody Person person) {
+	public ResponseEntity<Person> putPerson(@RequestBody Person person) throws Exception {
 		return personService.putPerson(person);
 	}
 
 	@DeleteMapping(value = "/person")
-	public ResponseEntity<Person> deletePerson(@RequestBody Person person) {
+	public ResponseEntity<Person> deletePerson(@RequestBody Person person) throws Exception {
 
 		return personService.deletePerson(person);
 	}
@@ -95,12 +95,12 @@ public class Controller {
 	}
 
 	@PutMapping(value = "/firestation")
-	public ResponseEntity<Firestation> putFirestation(@RequestBody Firestation firestation) {
+	public ResponseEntity<Firestation> putFirestation(@RequestBody Firestation firestation) throws Exception {
 		return firestationService.putFirestation(firestation);
 	}
 
 	@DeleteMapping(value = "/firestation")
-	public ResponseEntity<Firestation> deleteFirestation(@RequestBody Firestation firestation) {
+	public ResponseEntity<Firestation> deleteFirestation(@RequestBody Firestation firestation) throws Exception {
 		return firestationService.deleteFirestation(firestation);
 	}
 
@@ -111,12 +111,12 @@ public class Controller {
 	}
 
 	@PutMapping(value = "/medicalRecord")
-	public ResponseEntity<MedicalRecord> putMedicalRecords(@RequestBody MedicalRecord medicalRecord) {
+	public ResponseEntity<MedicalRecord> putMedicalRecords(@RequestBody MedicalRecord medicalRecord) throws Exception {
 		return medicalRecordService.putMedicalRecord(medicalRecord);
 	}
 
 	@DeleteMapping(value = "/medicalRecord")
-	public ResponseEntity<MedicalRecord> deleteMedicalRecords(@RequestBody MedicalRecord medicalRecord) {
+	public ResponseEntity<MedicalRecord> deleteMedicalRecords(@RequestBody MedicalRecord medicalRecord) throws Exception{
 		return medicalRecordService.deleteMedicalRecord(medicalRecord);
 	}
 }

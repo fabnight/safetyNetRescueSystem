@@ -236,7 +236,7 @@ public class FirestationService {
 			if (firestationToPost.getAddress().equals(firestations.get(i).getAddress())) {
 				firestationToPost = firestations.get(i);
 				logger.error(
-						"This firestation was already found in database, please use a PUT query if you want to amend this firestation");
+						"This firestation address was already found in database, please use a PUT query if you want to amend this firestation");
 				return new ResponseEntity<Firestation>(firestationToPost, HttpStatus.CONFLICT);
 			} else if (i == firestations.size() - 1) {
 
@@ -252,29 +252,26 @@ public class FirestationService {
 	public ResponseEntity<Firestation> putFirestation(Firestation firestation) {
 		List<Firestation> firestations = globalData.getFirestations();
 		Firestation stationToUpdate = null;
-		try {
 
-			for (Integer i = 0; i < firestations.size() && stationToUpdate == null; i++) {
+		for (Integer i = 0; i < firestations.size() && stationToUpdate == null; i++) {
 
-				if (firestation.getAddress().equals(firestations.get(i).getAddress())) {
-					stationToUpdate = firestations.get(i);
-				}
+			if (firestation.getAddress().equals(firestations.get(i).getAddress())) {
+				stationToUpdate = firestations.get(i);
 			}
-
-		} catch (Exception ex) {
-			logger.error("This firestation was not found in database, please check the adrress");
-			return new ResponseEntity<Firestation>(firestation, HttpStatus.BAD_REQUEST);
-
-		} finally {
-			if (stationToUpdate != null)
-				stationToUpdate.setStation(firestation.getStation());
-			logger.info("firestation is amended");
 		}
-		return new ResponseEntity<Firestation>(firestation, HttpStatus.OK);
+
+		if (stationToUpdate != null) {
+			stationToUpdate.setStation(firestation.getStation());
+			logger.info("firestation is amended");
+			return new ResponseEntity<Firestation>(firestation, HttpStatus.OK);
+		}
+		logger.error("This firestation was not found in database, please check the address");
+		return new ResponseEntity<Firestation>(firestation, HttpStatus.BAD_REQUEST);
 	}
 
+
 //DELETE
-	public ResponseEntity<Firestation> deleteFirestation(Firestation firestation) {
+	public ResponseEntity<Firestation> deleteFirestation(Firestation firestation) throws Exception {
 
 		List<Firestation> firestations = globalData.getFirestations();
 		Firestation firestationToDelete = null;
@@ -292,7 +289,6 @@ public class FirestationService {
 			logger.info("firestation is deleted");
 			return new ResponseEntity<Firestation>(firestationToDelete, HttpStatus.OK);
 		}
-
 		logger.error("This firestation was not found in database, please check the station number and the address");
 		return new ResponseEntity<Firestation>(firestationToDelete, HttpStatus.BAD_REQUEST);
 	}

@@ -137,6 +137,7 @@ public class PersonService {
 		return listOfEmails;
 	}
 
+//POST
 	public ResponseEntity<Person> postPerson(Person personToPost) {
 
 		List<Person> persons = globalData.getPersons();
@@ -160,7 +161,7 @@ public class PersonService {
 	}
 
 //PUT
-	public ResponseEntity<Person> putPerson(Person person) {
+	public ResponseEntity<Person> putPerson(Person person) throws Exception {
 
 		List<Person> persons = globalData.getPersons();
 		Person personToUpdate = null;
@@ -187,8 +188,9 @@ public class PersonService {
 		return new ResponseEntity<Person>(person, HttpStatus.BAD_REQUEST);
 
 	}
-
-	public ResponseEntity<Person> deletePerson(Person person) {
+	
+//DELETE
+	public ResponseEntity<Person> deletePerson(Person person) throws Exception{
 
 		List<Person> persons = globalData.getPersons();
 		Person personToDelete = null;
@@ -207,7 +209,7 @@ public class PersonService {
 			return new ResponseEntity<Person>(person, HttpStatus.OK);
 
 		}
-		logger.error("person to delete not found");
+		logger.error("person to delete not found, please check firstname and lastname");
 		return new ResponseEntity<Person>(person, HttpStatus.BAD_REQUEST);
 	}
 

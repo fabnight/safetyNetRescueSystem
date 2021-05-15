@@ -39,7 +39,7 @@ public class MedicalRecordService {
 	}
 
 	//PUT
-	public ResponseEntity<MedicalRecord> putMedicalRecord(MedicalRecord medicalRecord) {
+	public ResponseEntity<MedicalRecord> putMedicalRecord(MedicalRecord medicalRecord) throws Exception {
 
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
 		MedicalRecord medicalRecordToUpdate = null;
@@ -67,7 +67,7 @@ public class MedicalRecordService {
 	}
 
 	//DELETE
-	public ResponseEntity<MedicalRecord> deleteMedicalRecord(MedicalRecord medicalRecord) {
+	public ResponseEntity<MedicalRecord> deleteMedicalRecord(MedicalRecord medicalRecord) throws Exception{
 
 		List<MedicalRecord> medicalRecords = globalData.getMedicalrecords();
 		MedicalRecord medicalRecordToDelete = null;

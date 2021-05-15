@@ -36,27 +36,32 @@ class ControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-//	@Test
-//	void testPersonsByfirestationsList() {
-//		fail("Not yet implemented");
-//	}
-//
-
-//
 	@Test
-	void testGetPersonEmailByCity() throws Exception {
-		mockMvc.perform(
-				get("/communityEmail")
-				.param("city", "Culver"))
+	void testFirestation() throws Exception {
+		mockMvc.perform(get("/firestation").contentType(MediaType.APPLICATION_JSON).param("stationNumber", "2"))
+				.andExpect(status().isOk());
+
+	}
+
+	@Test
+	void testgetChildrenByAdress() throws Exception {
+		mockMvc.perform(get("/childAlert").contentType(MediaType.APPLICATION_JSON).param("address", "1509 Culver St"))
+		.andExpect(status().isOk());
+	}
+
+	@Test
+	void testGetPersonPhone() throws Exception {
+		mockMvc.perform(get("/phoneAlert").contentType(MediaType.APPLICATION_JSON).param("firestation", "2"))
+				.andExpect(status().isOk());
+
+	}
+
+	@Test
+	void testFire() throws Exception {
+		mockMvc.perform(get("/fire").contentType(MediaType.APPLICATION_JSON).param("address", "1509 Culver St"))
 				.andExpect(status().isOk());
 	}
 
-//
-//	@Test
-//	void testFire() {
-//		fail("Not yet implemented");
-//	}
-//
 	@Test
 	void testFirestationsList() throws Exception {
 		mockMvc.perform(get("/flood/stations").contentType(MediaType.APPLICATION_JSON).param("stations", "2,3"))
@@ -65,19 +70,20 @@ class ControllerTest {
 	}
 
 	@Test
-	void testFirestations() throws Exception {
-		mockMvc.perform(get("/firestation").contentType(MediaType.APPLICATION_JSON).param("stationNumber", "2"))
-
-				.andExpect(status().isOk());
-		 
+	void testGetPersonEmailByCity() throws Exception {
+		mockMvc.perform(get("/communityEmail").param("city", "Culver")).andExpect(status().isOk());
 	}
+
+	@Test
+	void testgetAllergies() throws Exception {
+		mockMvc.perform(get("/personInfo").contentType(MediaType.APPLICATION_JSON).param("firstName","John").param("lastName","Boyd"))
+				.andExpect(status().isOk());
+	}
+
 //
 
 //
-//	@Test
-//	void testGetPersonPhone() {
-//		fail("Not yet implemented");
-//	}
+
 //
 	@Test
 	void testPostPerson() throws Exception {
@@ -147,7 +153,7 @@ class ControllerTest {
 
 	@Test
 	void testDeleteMedicalRecords() throws Exception {
-		mockMvc.perform(delete("/firestation").contentType(MediaType.APPLICATION_JSON).content(
+		mockMvc.perform(delete("/medicalRecord").contentType(MediaType.APPLICATION_JSON).content(
 				"{\"firstName\":\"John\",\"lastname\":\"Boyd\" ,\"birthdate\":\"01/01/2000\",\"medications\":[\"aznol:350mg\", \"hydrapermazol:100mg\"],\"allergies\":[\"nillacilan\"]}"))
 
 				.andExpect(status().isOk());
